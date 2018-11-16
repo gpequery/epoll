@@ -8,7 +8,7 @@ Serveur NodeJs sur le port 8546
 Node -v >= 7
 npm install –g truffle
 npm install –g ganache-cli
-npm install web3 (TO VERIFY --> may be install on nodeJs when install node depedencies)
+cd Web && npm install
 
 ## Truffle infos & command
 Compile:        truffle compile
