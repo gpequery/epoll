@@ -3,8 +3,9 @@ Projet BlockChain
 
 ##Required installation
 Node -v >= 7
-Npm install –g truffle
-Npm install –g ganache-cli
+npm install –g truffle
+npm install –g ganache-cli
+npm install web3 (TO VERIFY --> may be install on nodeJs when install node depedencies)
 
 ##Truffle infos & command
 Compile:        truffle compile
