@@ -1,6 +1,8 @@
 
 # epoll
 Projet BlockChain
+Serveur Ganache sur le port 8545
+Serveur NodeJs sur le port 8546
 
 ## Required installation
 Node -v >= 7
@@ -18,6 +20,10 @@ Lunch : ganache-cli -a 40 -l 0x1C9C380
   -a : nombre d’account
   -l : gas limit
 
+## nodeJs Infos & command
+cd web
+npm install (nistall depedencies)
+npm start (run server)
 
 ## Project diagrams
 
