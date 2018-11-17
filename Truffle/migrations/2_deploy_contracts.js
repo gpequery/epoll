@@ -1,5 +1,5 @@
-var nomSC = artifacts.require("./nomSC.sol");
+var pollFactory = artifacts.require("./PollFactory.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(nomSC);
+  deployer.deploy(pollFactory);
 };

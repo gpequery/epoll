@@ -9,6 +9,48 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+/*******MY CODE START********/
+var Web3 = require('web3');
+
+if (typeof web3 !== 'undefined') {
+  var web3 = new Web3(web3.currentProvider)
+} else {
+  var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+}
+
+
+var pollFactoryContract;
+
+startApp();
+//getParticipant(0);
+/*J'arrive pas à appeler les function du contrat !!*/
+createParticipant("Greg", 23);
+
+  /*********DEFINE FUNCTION**********/
+function startApp() {
+    const pollFactory = require('../Truffle/build/contracts/PollFactory.json');
+    //const pollFactoryAddress = "0x358cfd70c36732bac99599b62e53a48e2f1742ed";
+    const pollFactoryAddress = "0xfdfc12875b44beb23fedaf443b9583c70afecfe8";
+
+    pollFactoryContract = new web3.eth.Contract(pollFactory['abi'], pollFactoryAddress);
+}
+
+function getParticipant(id) {
+    var participants = pollFactoryContract.methods.participants(id).call();
+    console.log(participants);
+}
+
+async function createParticipant(name, age) {
+  //var newId = pollFactoryContract.methods.createparticipant(name, age).call();
+
+  let deployedContract = await pollFactoryContract.deployed()
+  let newId = await deployedContract.createparticipant(name, age)
+
+  console.console.log(newId);
+}
+
+/*******MY CODE END********/
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
