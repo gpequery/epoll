@@ -1,3 +1,6 @@
+# Start Project
+ganache-cli -a 40 -l 0x1C9C380
+npm start
 
 # epoll
 Projet BlockChain

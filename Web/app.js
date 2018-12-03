@@ -30,7 +30,7 @@ createParticipant("Greg", 23);
 function startApp() {
     const pollFactory = require('../Truffle/build/contracts/PollFactory.json');
     //const pollFactoryAddress = "0x358cfd70c36732bac99599b62e53a48e2f1742ed";
-    const pollFactoryAddress = "0xfdfc12875b44beb23fedaf443b9583c70afecfe8";
+    const pollFactoryAddress = "0x43a53ccae1dc4bc8c7b19c9112cd217520f38f72";
 
     pollFactoryContract = new web3.eth.Contract(pollFactory['abi'], pollFactoryAddress);
 }
@@ -41,12 +41,15 @@ function getParticipant(id) {
 }
 
 async function createParticipant(name, age) {
+  var message = pollFactoryContract.methods.getMessage().call();
+
+
   //var newId = pollFactoryContract.methods.createparticipant(name, age).call();
 
-  let deployedContract = await pollFactoryContract.deployed()
-  let newId = await deployedContract.createparticipant(name, age)
+  //let deployedContract = await pollFactoryContract.deployed()
+  //let newId = await deployedContract.createparticipant(name, age)
 
-  console.console.log(newId);
+  console.log(message);
 }
 
 /*******MY CODE END********/

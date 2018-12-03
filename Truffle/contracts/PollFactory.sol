@@ -12,6 +12,10 @@ contract PollFactory {
 
   }
 
+  function getMessage() returns (string) {
+    return "Hello world";
+  }
+
   function createparticipant(string _name, uint _age) internal returns (uint) {
     uint id = participants.push(Participant(_name, _age)) - 1;
 
