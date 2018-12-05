@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var contract = require('truffle-contract')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -18,30 +18,30 @@ if (typeof web3 !== 'undefined') {
   var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
 }
 
-
 var pollFactoryContract;
+const pollFactory = require('../Truffle/build/contracts/PollFactory.json');
+
+pollFactoryContract = contract(pollFactory);
+
+pollFactoryContract.setProvider(web3.currentProvider);
+if (typeof pollFactoryContract.currentProvider.sendAsync !== "function") {
+  pollFactoryContract.currentProvider.sendAsync = function() {
+    return pollFactoryContract.currentProvider.send.apply(pollFactoryContract.currentProvider, arguments);
+  };
+}
 
 startApp();
-//getParticipant(0);
 /*J'arrive pas à appeler les function du contrat !!*/
 createParticipant("Greg", 23);
 
   /*********DEFINE FUNCTION**********/
 function startApp() {
-    const pollFactory = require('../Truffle/build/contracts/PollFactory.json');
-    //const pollFactoryAddress = "0x358cfd70c36732bac99599b62e53a48e2f1742ed";
-    const pollFactoryAddress = "0x43a53ccae1dc4bc8c7b19c9112cd217520f38f72";
-
-    pollFactoryContract = new web3.eth.Contract(pollFactory['abi'], pollFactoryAddress);
-}
-
-function getParticipant(id) {
-    var participants = pollFactoryContract.methods.participants(id).call();
-    console.log(participants);
 }
 
 async function createParticipant(name, age) {
-  var message = pollFactoryContract.methods.getMessage().call();
+  let deployedContract = await pollFactoryContract.deployed() ;
+  console.log(await deployedContract.getMessage())
+//  var message = pollFactoryContract.getMessage().call();
 
 
   //var newId = pollFactoryContract.methods.createparticipant(name, age).call();
@@ -49,7 +49,7 @@ async function createParticipant(name, age) {
   //let deployedContract = await pollFactoryContract.deployed()
   //let newId = await deployedContract.createparticipant(name, age)
 
-  console.log(message);
+  //console.log(message);
 }
 
 /*******MY CODE END********/

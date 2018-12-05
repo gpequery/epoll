@@ -12,7 +12,7 @@ contract PollFactory {
 
   }
 
-  function getMessage() returns (string) {
+  function getMessage() view returns (string) {
     return "Hello world";
   }
 
