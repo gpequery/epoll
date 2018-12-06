@@ -1,6 +1,6 @@
 # Start Project
-ganache-cli -a 40 -l 0x1C9C380
-npm start
+CMD 1 : Ganache-cli -a 40 -l 0x1C9C380
+CMD 2 : cd Truffle && truffle migrate --compile-all && cd ../Web && npm install && npm start
 
 # epoll
 Projet BlockChain
