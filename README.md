@@ -1,9 +1,9 @@
 # Start Project
-[Linux]  
+**[Linux]**  
 CMD 1 : Ganache-cli -a 40 -l 0x1C9C380  
 CMD 2 : cd Truffle && truffle migrate --compile-all && cd ../Web && npm install && npm start
   
-[Windows]  
+**[Windows]**  
 CMD 1 : Ganache-cli -a 40 -l 0x1C9C380  
 CMD 2 : cd Truffle   
 CMD 3 : truffle migrate --compile-all  
