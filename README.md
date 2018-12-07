@@ -38,17 +38,3 @@ Lunch : ganache-cli -a 40 -l 0x1C9C380
 cd web
 npm install (nistall depedencies)
 npm start (run server)
-
-## Project diagrams
-
-```mermaid
-graph TB
-A[epoll] --> B(Truffle)
-A --Serveur Node --> C(Web)
-```
-
-
-
-
-Vote déb : 01/03/18
-Vote fin : 30/03/18
