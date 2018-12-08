@@ -7,8 +7,8 @@ var contract = require('truffle-contract')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var pollFunction = require('./functions/poll');
-var app = express();
 
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
