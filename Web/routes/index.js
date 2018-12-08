@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var pollClass = new require('../Contracts/pollContract');
+var pollClass = new require('../Contracts/PollContract');
 
 var contract = require('truffle-contract');
 var Web3 = require('web3');

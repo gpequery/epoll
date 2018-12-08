@@ -43,3 +43,6 @@ npm start (run server)
 Twig 1.12.0
 jQuery 3.3.1
 Bootstrap 4.1.3
+
+## DEV
+Nouveau contrat Truffle --> Penser à ajouter son deployement dans Truffle/migrations/2_deploy_contracts.JS

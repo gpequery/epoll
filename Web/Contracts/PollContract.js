@@ -9,18 +9,18 @@ module.exports = class PollFactory {
            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
        }
 
-       const pollFactory = require('../../Truffle/build/contracts/PollFactory.json');
+       const factory = require('../../Truffle/build/contracts/PollFactory.json');
 
-       var pollFactoryContract = contract(pollFactory);
+       var factoryContract = contract(factory);
 
-       pollFactoryContract.setProvider(web3.currentProvider);
-       if (typeof pollFactoryContract.currentProvider.sendAsync !== "function") {
-           pollFactoryContract.currentProvider.sendAsync = function() {
-               return pollFactoryContract.currentProvider.send.apply(pollFactoryContract.currentProvider, arguments);
+       factoryContract.setProvider(web3.currentProvider);
+       if (typeof factoryContract.currentProvider.sendAsync !== "function") {
+           factoryContract.currentProvider.sendAsync = function() {
+               return factoryContract.currentProvider.send.apply(factoryContract.currentProvider, arguments);
            };
        }
 
-       this.deployedContract = pollFactoryContract.deployed();
+       this.deployedContract = factoryContract.deployed();
    }
 
    getMessage() {
