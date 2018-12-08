@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
     pollContract.getMessage()
     .then( message => {
         res.render('index', { data: message });
-    }).catch( (err) => {
+    }).catch( error => {
         res.render('index', { data: error });
     });
 });

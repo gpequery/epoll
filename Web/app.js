@@ -6,10 +6,8 @@ var logger = require('morgan');
 var contract = require('truffle-contract')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var pollFunction = require('./functions/poll')
-
+var pollFunction = require('./functions/poll');
 var app = express();
-
 
 
 // view engine setup

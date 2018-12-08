@@ -1,6 +1,9 @@
 {% extends "layout.twig" %}
 
+{% block header %}
+    <script src="/javascripts/index.js"></script>
+{% endblock %}
 
 {% block body %}
-    <div>OLALA {{data}}</div>
+    <input type="submit" class="btn btn-dark" value="{{data}}" />
 {% endblock %}

@@ -38,3 +38,8 @@ Lunch : ganache-cli -a 40 -l 0x1C9C380
 cd web
 npm install (nistall depedencies)
 npm start (run server)
+
+## Front
+Twig 1.12.0
+jQuery 3.3.1
+Bootstrap 4.1.3
