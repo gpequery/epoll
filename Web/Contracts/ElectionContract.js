@@ -50,4 +50,30 @@ module.exports = class ElectionFactory {
            console.error(error);
        });
    }
+
+   getElection(id) {
+       return this.deployedContract
+       .then(deployedContract => {
+           return deployedContract.getElection(id);
+       }).then(election => {
+           if(!election){
+               return Promise.reject(null);
+           }
+
+           return Promise.resolve(election);
+       }).catch(error => {
+           console.error(error);
+       });
+   }
+
+   getElectionsSize() {
+       return this.deployedContract
+       .then(deployedContract => {
+           return deployedContract.getElectionsSize();
+       }).then(size => {
+           return Promise.resolve(size);
+       }).catch(error => {
+           console.error(error);
+       });
+   }
 }
