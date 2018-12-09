@@ -39,9 +39,8 @@ module.exports = class ElectionFactory {
    createElection(label) {
        return this.deployedContract
        .then(deployedContract => {
-           return deployedContract.createElection();
+           return deployedContract.createElection(label);
        }).then(id => {
-           console.log('2 : ' + id);
            if(!id){
                return Promise.reject(null);
            }
