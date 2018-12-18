@@ -1,14 +1,14 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+let router = express.Router();
 
-var electionClass = require('../Contracts/ElectionContract');
-var electionContract = new electionClass();
+let electionClass = require('../Contracts/ElectionContract');
+let electionContract = new electionClass();
 
 /* GET users listing. */
 router.post('/create', function(req, res, next) {
     var label = req.body.label;
 
-    electionContract.createElection(label).then( newId => {
+    electionContract.createElection(label, 10, 10, 10, 10).then( newId => {
         console.log('New ID : ' + newId);
     });
 });

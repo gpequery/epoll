@@ -1,31 +1,30 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var contract = require('truffle-contract')
-var indexRouter = require('./routes/index');
-var electionRouter = require('./routes/election');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const indexRouter = require('./routes/index');
+const electionRouter = require('./routes/election');
 
-var app = express();
+let app = express();
 
-var electionClass = require('./Contracts/ElectionContract');
-var electionContract = new electionClass();
+// var electionClass = require('./Contracts/ElectionContract');
+// var electionContract = new electionClass();
 
 
-electionContract.getElection(0)
-.then( election => {
-    console.log('GET ELECTION : ' + election);
-}).catch( error => {
-    console.log(error);
-});
+// electionContract.getElection(0)
+// .then( election => {
+//     console.log('GET ELECTION : ' + election);
+// }).catch( error => {
+//     console.log(error);
+// });
 
-electionContract.getElectionsSize()
-.then( size => {
-    console.log('ELECTION SIZE : ' + size);
-}).catch( error => {
-    console.log(error);
-});
+// electionContract.getElectionsSize()
+// .then( size => {
+//     console.log('ELECTION SIZE : ' + size);
+// }).catch( error => {
+//     console.log(error);
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

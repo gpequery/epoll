@@ -1,19 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var contract = require('truffle-contract');
-var Web3 = require('web3');
-
-var pollClass = require('../Contracts/PollContract');
-var pollContract = new pollClass();
+const express = require('express');
+const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    pollContract.getMessage()
-    .then( message => {
-        res.render('index', { data: message });
-    }).catch( error => {
-        res.render('index', { data: error });
-    });
+    console.log('INDEX');
+    res.render('index', { data: 'TOTO' });
 });
 
 module.exports = router;
