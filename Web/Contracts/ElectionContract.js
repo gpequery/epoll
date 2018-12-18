@@ -1,4 +1,8 @@
 const Web3 = require('web3');
+const fs = require("fs");
+const path = require('path');
+
+
 let web3;
 
 module.exports = class ElectionFactory {
@@ -23,8 +27,8 @@ module.exports = class ElectionFactory {
        web3.eth.defaultAccount = web3.eth.accounts[0];
 
        // Récupération des informations du contrat
-       let fs = require('fs');
-       let jsonFile = "C:\\Users\\JUAN\\PhpstormProjects\\epoll\\Truffle\\build\\contracts\\ElectionFactory.json";
+       let appDir = path.dirname(require.main.filename);
+       let jsonFile = appDir.substring(0, appDir.length-7) + '\\Truffle\\build\\contracts\\ElectionFactory.json';
        let parsed= JSON.parse(fs.readFileSync(jsonFile));
        let abi = parsed.abi;
 
@@ -48,6 +52,32 @@ module.exports = class ElectionFactory {
                console.error(error);
            });
    }
+
+    /**
+     * Given a source directory and a target filename, return the relative
+     * file path from source to target.
+     * @param source {String} directory path to start from for traversal
+     * @param target {String} directory path and filename to seek from source
+     * @return Relative path (e.g. "../../style.css") as {String}
+     */
+     getRelativePath(source, target) {
+        var sep = (source.indexOf("/") !== -1) ? "/" : "\\",
+            targetArr = target.split(sep),
+            sourceArr = source.split(sep),
+            filename = targetArr.pop(),
+            targetPath = targetArr.join(sep),
+            relativePath = "";
+
+        while (targetPath.indexOf(sourceArr.join(sep)) === -1) {
+            sourceArr.pop();
+            relativePath += ".." + sep;
+        }
+
+        var relPathArr = targetArr.slice(sourceArr.length);
+        relPathArr.length && (relativePath += relPathArr.join(sep) + sep);
+
+        return relativePath + filename;
+    }
 
    // getElection(id) {
    //     return this.deployedContract
