@@ -34,7 +34,7 @@ contract ElectionFactory {
 
         elections.push(election);
 
-        return 33;
+        return id;
     }
 
     function _generateRandom(string _str) private pure returns (uint) {

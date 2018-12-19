@@ -14,7 +14,7 @@ module.exports = class ElectionFactory {
        } else {
            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
            //Clé public de l'utilisateur par default
-           web3.eth.accounts[0] = '0xf20da7630233a0ed372e49a4b84384a3c913a189';
+           web3.eth.accounts[0] = '0x12e2fdd528086c4cb31779d67570a8f494e8f97e';
            //Liste les comptes possédant du crédit
            // let accounts =  web3.eth.getAccounts();
            // web3.eth.accounts[0] = accounts[0];
@@ -33,7 +33,7 @@ module.exports = class ElectionFactory {
        let abi = parsed.abi;
 
        // Création du contrat en spécifiant l'adresse de deploiement
-       this.deployedContract = new web3.eth.Contract(abi, '0x499a18463ba0709aced21e9a6fde597e7d11b7a7');
+       this.deployedContract = new web3.eth.Contract(abi, '0x0d1732f3113d5a2028c87690112e421bfcb24ccb');
    }
 
 
@@ -52,36 +52,24 @@ module.exports = class ElectionFactory {
            if(!id){
                return Promise.reject(null);
            }
-           return Promise.resolve( parseInt(id,10));
+           return Promise.resolve(id);
            }).catch(error => {
                console.error(error);
            });
    }
 
-    /**
-     * Given a source directory and a target filename, return the relative
-     * file path from source to target.
-     * @param source {String} directory path to start from for traversal
-     * @param target {String} directory path and filename to seek from source
-     * @return Relative path (e.g. "../../style.css") as {String}
-     */
-     getRelativePath(source, target) {
-        var sep = (source.indexOf("/") !== -1) ? "/" : "\\",
-            targetArr = target.split(sep),
-            sourceArr = source.split(sep),
-            filename = targetArr.pop(),
-            targetPath = targetArr.join(sep),
-            relativePath = "";
-
-        while (targetPath.indexOf(sourceArr.join(sep)) === -1) {
-            sourceArr.pop();
-            relativePath += ".." + sep;
+    getElectionList() {
+        try {
+            return this.deployedContract.methods.getElectionsList().call().then(function(results){
+                            if(!results){
+                                return Promise.reject(null);
+                            }
+                            return Promise.resolve(results);
+                        });
         }
-
-        var relPathArr = targetArr.slice(sourceArr.length);
-        relPathArr.length && (relativePath += relPathArr.join(sep) + sep);
-
-        return relativePath + filename;
+        catch(error) {
+            console.error(error);
+        }
     }
 
    // getElection(id) {

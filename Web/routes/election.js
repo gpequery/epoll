@@ -13,7 +13,14 @@ router.post('/create', function(req, res, next) {
     let election_end_vote = req.body.election_end_vote;
 
     electionContract.createElection(election_name, election_start_candidate, election_end_candidate, election_start_vote, election_end_vote).then( newId => {
-        console.log('New ID : ' + newId);
+        var my_obj_str = JSON.stringify(newId);
+        console.log('CreateElection : ' + my_obj_str);
+    });
+});
+
+router.get('/list', function(req, res, next) {
+    electionContract.getElectionList().then( results => {
+        console.log('ElectionList : ' + results);
     });
 });
 
