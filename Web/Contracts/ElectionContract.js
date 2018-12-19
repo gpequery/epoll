@@ -14,10 +14,10 @@ module.exports = class ElectionFactory {
        } else {
            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
            //Clé public de l'utilisateur par default
-           // web3.eth.accounts[0] = '0xf20da7630233a0ed372e49a4b84384a3c913a189';
+           web3.eth.accounts[0] = '0xf20da7630233a0ed372e49a4b84384a3c913a189';
            //Liste les comptes possédant du crédit
-           let accounts =  web3.eth.getAccounts();
-           web3.eth.accounts[0] = accounts[0];
+           // let accounts =  web3.eth.getAccounts();
+           // web3.eth.accounts[0] = accounts[0];
        }
         console.log('ACCOUNT :' + web3.eth.accounts[0]);
        //Liste les comptes possédant du crédit
@@ -40,8 +40,13 @@ module.exports = class ElectionFactory {
 
    createElection(name, candidatureStart, candidatureEnd, voteStart, voteEnd) {
        let account = web3.eth.defaultAccount;
-       console.log(account);
-       return this.deployedContract.methods.createElection(name,candidatureStart,candidatureEnd,voteStart,voteEnd)
+
+       let candidatureStartTime = new Date(candidatureStart);
+       let candidatureEndTime = new Date(candidatureEnd);
+       let voteStartTime = new Date(voteStart);
+       let voteEndTime = new Date(voteEnd);
+
+       return this.deployedContract.methods.createElection(name,candidatureStartTime.getTime(),candidatureEndTime.getTime(),voteStartTime.getTime(),voteEndTime.getTime())
            .send({from: account, gas:3000000})
            .then(id => {
            if(!id){
