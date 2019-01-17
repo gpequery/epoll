@@ -3,11 +3,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+var favicon = require('serve-favicon');
 const indexRouter = require('./routes/index');
 const electionRouter = require('./routes/election');
 
 let app = express();
 
+app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');

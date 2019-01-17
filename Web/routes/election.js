@@ -13,37 +13,14 @@ router.post('/create', function(req, res, next) {
     let election_end_vote = req.body.election_end_vote;
 
     electionContract.createElection(election_name, election_start_candidate, election_end_candidate, election_start_vote, election_end_vote).then( newId => {
-        var my_obj_str = JSON.stringify(newId);
-        console.log('CreateElection : ' + my_obj_str);
+        var newId = JSON.stringify(newId);
+        console.log('CreateElection ID : ' + newId);
     });
 });
 
-router.get('/list', function(req, res, next) {
-    electionContract.getElectionList().then( results => {
-        console.log('ElectionList : ' + results);
-    });
-
-     electionContract.getElectionById(0).then( result => {
-         let my_obj_str = JSON.stringify(result);
-
-         console.log('ElectionById : ' + my_obj_str);
-     });
-
-    electionContract.getElectionById(222).then( result => {
-        let my_obj_str = JSON.stringify(result);
-
-        console.log('ElectionById : ' + my_obj_str);
-    });
-
-    electionContract.deleteElectionById(222).then( result => {
-        let my_obj_str = JSON.stringify(result);
-
-        console.log('DeleteElectionById : ' + my_obj_str);
-    });
-    electionContract.deleteElectionById(0).then( result => {
-        let my_obj_str = JSON.stringify(result);
-
-        console.log('DeleteElectionById : ' + my_obj_str);
+router.post('/getById', function(req, res, next) {
+    electionContract.getElectionById(req.body.id).then(election => {
+        res.send(election);
     });
 });
 
