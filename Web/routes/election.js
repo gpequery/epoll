@@ -22,6 +22,29 @@ router.get('/list', function(req, res, next) {
     electionContract.getElectionList().then( results => {
         console.log('ElectionList : ' + results);
     });
+
+     electionContract.getElectionById(0).then( result => {
+         let my_obj_str = JSON.stringify(result);
+
+         console.log('ElectionById : ' + my_obj_str);
+     });
+
+    electionContract.getElectionById(222).then( result => {
+        let my_obj_str = JSON.stringify(result);
+
+        console.log('ElectionById : ' + my_obj_str);
+    });
+
+    electionContract.deleteElectionById(222).then( result => {
+        let my_obj_str = JSON.stringify(result);
+
+        console.log('DeleteElectionById : ' + my_obj_str);
+    });
+    electionContract.deleteElectionById(0).then( result => {
+        let my_obj_str = JSON.stringify(result);
+
+        console.log('DeleteElectionById : ' + my_obj_str);
+    });
 });
 
 module.exports = router;

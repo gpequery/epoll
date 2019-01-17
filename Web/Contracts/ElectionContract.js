@@ -14,7 +14,7 @@ module.exports = class ElectionFactory {
        } else {
            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
            //Clé public de l'utilisateur par default
-           web3.eth.accounts[0] = '0x12e2fdd528086c4cb31779d67570a8f494e8f97e';
+           web3.eth.accounts[0] = '0x4104e758688acf6148fda9c9de0379e0095e9c7e';
            //Liste les comptes possédant du crédit
            // let accounts =  web3.eth.getAccounts();
            // web3.eth.accounts[0] = accounts[0];
@@ -33,10 +33,8 @@ module.exports = class ElectionFactory {
        let abi = parsed.abi;
 
        // Création du contrat en spécifiant l'adresse de deploiement
-       this.deployedContract = new web3.eth.Contract(abi, '0x0d1732f3113d5a2028c87690112e421bfcb24ccb');
+       this.deployedContract = new web3.eth.Contract(abi, '0xfb6ac3982967d5cf32a43c845de50177ff58136f');
    }
-
-
 
    createElection(name, candidatureStart, candidatureEnd, voteStart, voteEnd) {
        let account = web3.eth.defaultAccount;
@@ -72,21 +70,36 @@ module.exports = class ElectionFactory {
         }
     }
 
-   // getElection(id) {
-   //     return this.deployedContract
-   //     .then(deployedContract => {
-   //         return deployedContract.getElection(id);
-   //     }).then(election => {
-   //         if(!election){
-   //             return Promise.reject(null);
-   //         }
-   //
-   //         return Promise.resolve(election);
-   //     }).catch(error => {
-   //         console.error(error);
-   //     });
-   // }
-   //
+    getElectionById(id) {
+        try {
+            return this.deployedContract.methods.getElectionById(id).call().then(function(results){
+                if(!results){
+                    return Promise.reject('Election Not found');
+                }
+                return Promise.resolve(results);
+            });
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
+
+    deleteElectionById(id) {
+        let account = web3.eth.defaultAccount;
+
+        try {
+            return this.deployedContract.methods.deleteElectionById(id).send({from: account, gas:3000000}).then(function(results){
+                if(!results){
+                    return Promise.reject('Election Not found');
+                }
+                return Promise.resolve(results);
+            });
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
+
    // getElectionsSize() {
    //     return this.deployedContract
    //     .then(deployedContract => {
