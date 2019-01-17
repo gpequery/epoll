@@ -14,7 +14,7 @@ module.exports = class ElectionFactory {
        } else {
            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
            //Clé public de l'utilisateur par default
-           web3.eth.accounts[0] = '0x4104e758688acf6148fda9c9de0379e0095e9c7e';
+           web3.eth.accounts[0] = '0xdc2f0ecbeaae48275f55181cc6a179bd357bca03';
            //Liste les comptes possédant du crédit
            // let accounts =  web3.eth.getAccounts();
            // web3.eth.accounts[0] = accounts[0];
@@ -27,13 +27,12 @@ module.exports = class ElectionFactory {
        web3.eth.defaultAccount = web3.eth.accounts[0];
 
        // Récupération des informations du contrat
-       let appDir = path.dirname(require.main.filename);
-       let jsonFile = appDir.substring(0, appDir.length-7) + '\\Truffle\\build\\contracts\\ElectionFactory.json';
-       let parsed= JSON.parse(fs.readFileSync(jsonFile));
-       let abi = parsed.abi;
+       let filePath = path.join('..', 'Truffle', 'build', 'contracts', 'ElectionFactory.json');
+       let fileParsed= JSON.parse(fs.readFileSync(filePath));
+       let abi = fileParsed.abi;
 
        // Création du contrat en spécifiant l'adresse de deploiement
-       this.deployedContract = new web3.eth.Contract(abi, '0xfb6ac3982967d5cf32a43c845de50177ff58136f');
+       this.deployedContract = new web3.eth.Contract(abi, '0x8213525b0223c355427e3dc81ca528ab5bbf9aa2');
    }
 
    createElection(name, candidatureStart, candidatureEnd, voteStart, voteEnd) {
