@@ -24,6 +24,14 @@ $j(document).ready(function () {
                 }, 'json');
             });
 
+            $j(document).on('click', "#getCandidate_"+id, function() {
+                $j.post('/election/getCandidateById', {
+                    id
+                }, function(data) {
+                    //TODO
+                }, 'json');
+            });
+
         }, 'json');
     })
 
@@ -43,7 +51,8 @@ function getElectionToHtml(electionId, election) {
         'Début des votes :'+ election.votePeriodStart + '</br>' +
         'Fin des votes :'+ election.votePeriodEnd + '</br>' +
         '<button id="candidateList_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Liste des candidats</button></br>' +
-        '<button id="addCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Ajouter un candidat</button></div>';
+        '<button id="addCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Ajouter un candidat</button></br>' +
+        '<button id="getCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test recup candidat</button></div>';
 
     html += '<h5 class="card-title">' + stats + '</h5>';
     html += '<p class="card-text">TEXTE ou IMAGE</p>';

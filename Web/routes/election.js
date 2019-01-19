@@ -50,4 +50,15 @@ router.post('/getCandidateList', function(req, res, next) {
     });
 });
 
+router.post('/getCandidateById', function(req, res, next) {
+    let election_id = req.body.id;
+
+    electionContract.getCandidateById(election_id, 210).then(result => {
+        let candidate = JSON.parse(JSON.stringify(result));
+        console.log('Candidate 210: ' + JSON.stringify(result));
+
+        res.send(candidate);
+    });
+});
+
 module.exports = router;

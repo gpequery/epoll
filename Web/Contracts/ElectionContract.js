@@ -124,4 +124,17 @@ module.exports = class ElectionFactory {
             console.error(error);
         }
     }
+
+    getCandidateById(electionId, contractId) {
+        try {
+            return this.deployedContract.methods.getCandidateById(electionId, contractId).call().then(function (results) {
+                if (!results) {
+                    return Promise.reject('Candidate Not found');
+                }
+                return Promise.resolve(results);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }
