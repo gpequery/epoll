@@ -69,5 +69,11 @@ router.post('/deleteCandidateById', function(req, res, next) {
     });
 });
 
+router.post('/voteInAnElection', function(req, res, next) {
+    let election_id = req.body.id;
+    electionContract.voteInAnElection(election_id, 456, "Batman", 25, 210).then(result => {
+        console.log('Vote de Batman : ' + JSON.stringify(result));
+    });
+});
 
 module.exports = router;

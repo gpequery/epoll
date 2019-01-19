@@ -153,4 +153,19 @@ module.exports = class ElectionFactory {
         }
     }
 
+    voteInAnElection(electionId, voterId, name, age, candidateId) {
+        let account = this.web3.eth.defaultAccount;
+
+        try {
+            return this.deployedContract.methods.voteInAnElection(electionId, voterId, name, age, candidateId).send({from: account, gas: 3000000}).then(function (results) {
+                if (!results) {
+                    return Promise.reject('Vote error');
+                }
+                return Promise.resolve(results);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 }
