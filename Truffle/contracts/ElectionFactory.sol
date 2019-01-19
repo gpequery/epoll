@@ -162,10 +162,10 @@ contract ElectionFactory {
     }
 
     //Supprimer un candidat//todo a tester
-    function deleteCandidate(uint8 _electionId, uint8 _candidateId) public view returns (bool, string) {
+    function deleteCandidate(uint8 _electionId, uint8 _candidateId) public returns (bool, string) {
         Election storage election = elections[_electionId];
         if(election.isValid){
-            Candidate memory candidate = election.candidates[_candidateId];
+            Candidate storage candidate = election.candidates[_candidateId];
             candidate.isValid = false;
             candidate.isDelete = true;
             return (true, MSG_deleteCandidate);

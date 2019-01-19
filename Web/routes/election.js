@@ -61,4 +61,13 @@ router.post('/getCandidateById', function(req, res, next) {
     });
 });
 
+router.post('/deleteCandidateById', function(req, res, next) {
+    let election_id = req.body.id;
+
+    electionContract.deleteCandidateById(election_id, 210).then(result => {
+        console.log('Delete candidate 210: ' + JSON.stringify(result));
+    });
+});
+
+
 module.exports = router;

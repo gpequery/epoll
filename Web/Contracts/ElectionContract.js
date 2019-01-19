@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0x5820de0456a572fcab54b2e3ad6de8c93c3db44a';
-let contractAddress = '0xb706648c1e2c43f352bf1fb8738af8ac04187573';
+let accountAddress = '0xef3576b6a23012e427e772393492821db88473f1';
+let contractAddress = '0x23b496a000fcf1848f4cc90e53d3b2553bcefaba';
 
 module.exports = class ElectionFactory {
 
@@ -137,4 +137,20 @@ module.exports = class ElectionFactory {
             console.error(error);
         }
     }
+
+    deleteCandidateById(electionId, candidateId) {
+        let account = this.web3.eth.defaultAccount;
+
+        try {
+            return this.deployedContract.methods.deleteCandidate(electionId, candidateId).send({from: account, gas: 3000000}).then(function (results) {
+                if (!results) {
+                    return Promise.reject('Candidate Not found');
+                }
+                return Promise.resolve(results);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 }
