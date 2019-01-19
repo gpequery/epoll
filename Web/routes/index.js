@@ -7,8 +7,9 @@ let electionContract = new electionClass();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    electionContract.getElectionList().then( electionsIds => {
-        res.render('index', {electionsIds: electionsIds});
+    electionContract.getElectionList().then( result => {
+        let results = JSON.parse(JSON.stringify(result));
+        res.render('index', {electionsIds: results.ids});
     });
 });
 

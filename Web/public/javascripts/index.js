@@ -5,20 +5,46 @@ $j(document).ready(function () {
         $j.post('/election/getById', {
             id: id
         }, function (data) {
-            var electionHtml = getElectionToHtml(id, data);
+            let electionHtml = getElectionToHtml(id, data);
             $j('#electionIndexContent').append(electionHtml);
+
+            $j(document).on('click', "#candidateList_"+id, function() {
+                $j.post('/election/getCandidateList', {
+                    id
+                }, function(data) {
+                    //TODO
+               }, 'json');
+            });
+
+            $j(document).on('click', "#addCandidate_"+id, function() {
+                $j.post('/election/addOrUpdateCandidate', {
+                    id
+                }, function(data) {
+                    //TODO
+                }, 'json');
+            });
+
         }, 'json');
     })
+
+
 });
 
-function getElectionToHtml(id, election) {
-    console.log(election);
+function getElectionToHtml(electionId, election) {
+
     let stats = getElectionState(election);
 
     let html = '';
-    html += '<div class="card text-white bg-dark mt-5 col-4 election" election_' + id + '">';
+    html += '<div class="card text-white bg-dark mt-5 col-4 election" election_' + electionId + '">';
     html += '<div class="card-header">' + election.name + '</div>';
-    html += '<div class="card-body">';
+    html += '<div class="card-body">' +
+        'Début des candidatures :'+ election.candidaturePeriodStart + '</br>' +
+        'Fin des candidatures :'+ election.candidaturePeriodEnd + '</br>' +
+        'Début des votes :'+ election.votePeriodStart + '</br>' +
+        'Fin des votes :'+ election.votePeriodEnd + '</br>' +
+        '<button id="candidateList_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Liste des candidats</button></br>' +
+        '<button id="addCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Ajouter un candidat</button></div>';
+
     html += '<h5 class="card-title">' + stats + '</h5>';
     html += '<p class="card-text">TEXTE ou IMAGE</p>';
     html += '</div>';

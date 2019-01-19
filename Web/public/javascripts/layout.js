@@ -18,4 +18,12 @@ $j(document).ready(function() {
             console.log(data);
         }, 'json');
     });
+
+    $j('#listCandidate .submit').on('click', function() {
+        $j.post('/election/getCandidateList', {
+        }, function(data) {
+            console.log('data');
+            console.log(data);
+        }, 'json');
+    });
 });

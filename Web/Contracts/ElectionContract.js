@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0x494929143e4ffab62c91d7faa9e084a7132110ad';
-let contractAddress = '0x92af673988a6162513e1d5507204c21cfec80f66';
+let accountAddress = '0x5820de0456a572fcab54b2e3ad6de8c93c3db44a';
+let contractAddress = '0xb706648c1e2c43f352bf1fb8738af8ac04187573';
 
 module.exports = class ElectionFactory {
 
@@ -93,14 +93,35 @@ module.exports = class ElectionFactory {
         }
     }
 
-    // getElectionsSize() {
-    //     return this.deployedContract
-    //     .then(deployedContract => {
-    //         return deployedContract.getElectionsSize();
-    //     }).then(size => {
-    //         return Promise.resolve(size);
-    //     }).catch(error => {
-    //         console.error(error);
-    //     });
-    // }
+    addOrUpdateCandidate(electionId, candidateId, firstName, lastName, description, pictureUrl) {
+        let account = this.web3.eth.defaultAccount;
+        try {
+            return this.deployedContract.methods.addOrUpdateCandidate(electionId, candidateId, firstName, lastName, description, pictureUrl).send({
+                from: account,
+                gas: 3000000
+            }).then(function (results) {
+                if (!results) {
+                    return Promise.reject('Candidate Not Created');
+                }
+                return Promise.resolve(results);
+            });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    getCandidateList(electionId) {
+        try {
+            return this.deployedContract.methods.getCandidateList(electionId).call().then(function(results){
+                if(!results){
+                    return Promise.reject("Election Not Found");
+                }
+                return Promise.resolve(results);
+            });
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
 }

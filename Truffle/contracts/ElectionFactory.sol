@@ -5,18 +5,21 @@ contract ElectionFactory {
     constructor() public {}
 
     struct Candidate {
-        string id;
+        uint8 id;
         string firstName;
         string lastName;
         string description;
-        string PictureUrl;
+        string pictureUrl;
+        uint8 nbVoters;
         bool isValid;
+        bool isDelete;
     }
 
     struct Voter {
+        uint8 id;
         string name;
         uint age;
-        string adr;
+        bool isValid;
     }
 
     struct Period {
@@ -29,93 +32,167 @@ contract ElectionFactory {
         string name;
         Period candidaturePeriod;
         Period votePeriod;
-        mapping (string => Candidate) candidates;
-        string[] candidatesKeys;
+        mapping (uint8 => Candidate) candidates;
+        uint8[] candidatesKeys;
+        mapping (uint8 => Voter) voters;
+        uint8[] votersKeys;
         bool isValid;
         bool isDeleted;
     }
 
     mapping (uint8 => Election) public elections;
     uint8[] public electionsKeys;
+    string private MSG_missingElection = "Election inconnu.";
+    string private MSG_missingCandidate = "Candidat inconnu.";
+    string private MSG_deleteCandidate = "Candidat supprimé.";
+    string private MSG_hasAlreadyVoted = "A déjà voté.";
+    string private MSG_hasVoted = "A voté.";
+    string private MSG_Ok = "Ok.";
 
-    //Election
-    function createElection(string _name, uint candidatureStart, uint candidatureEnd, uint voteStart, uint voteEnd) public returns (uint8) {
+    //Créer une élection
+    function createElection(string _name, uint _candidatureStart, uint _candidatureEnd, uint _voteStart, uint _voteEnd) public returns (bool state, string message, uint8 id) {
 
         uint8 createId = _generateRandom(_name);
-        Period memory candidaturePeriod = Period(candidatureStart, candidatureEnd);
-        Period memory votePeriod = Period(voteStart, voteEnd);
+        Period memory candidaturePeriod = Period(_candidatureStart, _candidatureEnd);
+        Period memory votePeriod = Period(_voteStart, _voteEnd);
 
-        string[] memory candidatesKeys = new string[](1);
-        candidatesKeys[0] = "0";
+        uint8[] memory candidatesKeys = new uint8[](1);
+        candidatesKeys[0] = 0;
 
-        Election memory election = Election(createId, _name, candidaturePeriod, votePeriod, candidatesKeys, true, false);
+        uint8[] memory votersKeys = new uint8[](1);
+        votersKeys[0] = 0;
 
+        Election memory election = Election(createId, _name, candidaturePeriod, votePeriod, candidatesKeys, votersKeys, true, false);
         elections[createId] = election;
         electionsKeys.push(createId);
 
-        return createId;
+        return (true, MSG_Ok, createId);
     }
 
-    function getElectionsList() public view returns ( uint8[]) {
+    //Renvoi la liste des élections valides
+    function getElectionsList() public view returns (bool state, string message,  uint8[] ids) {
         uint8[] memory result = new uint8[](electionsKeys.length);
         uint8 count = 0;
 
         for (uint i=0; i<electionsKeys.length; i++) {
             uint8 currentId = electionsKeys[i];
             Election memory election = elections[currentId];
-            if(!election.isDeleted){
+            if(election.isValid){
                 result[count] = currentId;
                 count++;
             }
         }
-        return result;
+        return (true, MSG_Ok, result);
     }
 
-    function getElectionById(uint8 id) public view returns (bool, string name, uint candidatureStart, uint candidatureEnd,  uint voteStart, uint voteEnd, bool isValid, bool isDeleted) {
-        Election memory election = elections[id];
-        if(election.isValid && !election.isDeleted){
-            return (true, election.name, election.candidaturePeriod.start, election.candidaturePeriod.end, election.votePeriod.start, election.votePeriod.end, election.isValid, election.isDeleted) ;
+    //Renvoi une election par ID
+    function getElectionById(uint8 _id) public view returns (bool state, string message, string name, uint candidaturePeriodStart, uint candidaturePeriodEnd,  uint votePeriodStart, uint votePeriodEnd, bool isValid, bool isDeleted) {
+        Election memory election = elections[_id];
+        if(election.isValid){
+            return (true, MSG_Ok, election.name, election.candidaturePeriod.start, election.candidaturePeriod.end, election.votePeriod.start, election.votePeriod.end, election.isValid, election.isDeleted) ;
         }
-        return (false, "0", 0, 0, 0, 0, false, false) ;
+        return (false, MSG_missingElection, "0", 0, 0, 0, 0, false, false) ;
     }
 
-    function deleteElectionById(uint8 _id) public returns (bool) {
-       Election storage election = elections[_id];
-
-       if(election.isValid){
-           election.isDeleted = true;
-           return true;
-        }
-
-        return false;
-    }
-
-    //Candidate//TODO
-    function addOrUpdateCandidate(uint8 electionId, string id, string firstName, string lastName, string description, string PictureUrl) public returns (bool) {
-        Election storage election = elections[electionId];
+    //Supprime une élection
+    function deleteElectionById(uint8 _id) public returns (bool state, string message) {
+        Election storage election = elections[_id];
 
         if(election.isValid){
-            Candidate memory checkCandidate = election.candidates[id];
-            if(checkCandidate.isValid){
-                delete election.candidates[id];
-            }
-            Candidate memory candidate = Candidate(id, firstName, lastName, description, PictureUrl, true);
-            election.candidates[id] = candidate;
-            return true;
+            election.isDeleted = true;
+            election.isValid = false;
+            return (true, MSG_Ok);
         }
-        return false;
+        return (false, MSG_missingElection);
     }
 
-    function deleteCandidate() public pure returns (bool) {//TODO
-        return true ;
+    //Ajoute ou modifie les informations d'un candidat
+    function addOrUpdateCandidate(uint8 _electionId, uint8 _candidateId, string _firstName, string _lastName, string _description, string _pictureUrl) public returns (bool, string) {
+        Election storage election = elections[_electionId];
+
+        if(election.isValid){
+            Candidate storage existCandidate = election.candidates[_candidateId];
+            if(existCandidate.isValid){
+                existCandidate.firstName = _firstName;
+                existCandidate.lastName = _lastName;
+                existCandidate.description = _description;
+                existCandidate.pictureUrl = _pictureUrl;
+            } else {
+                Candidate memory candidate = Candidate(_candidateId, _firstName, _lastName, _description, _pictureUrl, 0, true, false);
+                election.candidates[_candidateId] = candidate;
+                election.candidatesKeys.push(_candidateId);
+            }
+            return (true, MSG_Ok);
+        }
+        return (false, MSG_missingElection);
     }
 
-    //Voter à une élection
-    function voteInAnElection() pure public {//TODO
+    //Renvoi la liste des candidats d'une election
+    function getCandidateList(uint8 _electionId) public view returns ( bool, string, uint8[]) {
+        Election storage election = elections[_electionId];
+        if(election.isValid){
+            uint8[] storage candidatesKeys = election.candidatesKeys;
+            uint8[] memory result = new uint8[](candidatesKeys.length);
+            uint8 count = 0;
+
+            for (uint i=0; i<candidatesKeys.length; i++) {
+                uint8 currentId = candidatesKeys[i];
+                Candidate memory candidate = election.candidates[currentId];
+                if(candidate.isValid){
+                    result[count] = currentId;
+                    count++;
+                }
+            }
+            return (true, MSG_Ok, result);
+        }
+        return (false, MSG_missingElection, result) ;
     }
 
-    //Retourner la liste des candidats à une élection
-    function getCandidateList() pure public {//TODO
+    //Renvoi un candidat par ID//todo a tester
+    function getCandidateById(uint8 _electionId, uint8 _candidateId) public view returns (bool, string, string, string, string, string, bool, bool) {
+        Election storage election = elections[_electionId];
+        if(election.isValid){
+            Candidate memory candidate = election.candidates[_candidateId];
+            if(candidate.isValid){
+                return (true, MSG_Ok, candidate.firstName, candidate.lastName, candidate.description, candidate.pictureUrl, candidate.isValid, candidate.isDelete) ;
+            }
+            return (false, MSG_missingCandidate, "0", "0", "0", "0", false, false) ;
+        }
+        return (false, MSG_missingElection, "0", "0", "0", "0", false, false) ;
+    }
+
+    //Supprimer un candidat//todo a tester
+    function deleteCandidate(uint8 _electionId, uint8 _candidateId) public view returns (bool, string) {
+        Election storage election = elections[_electionId];
+        if(election.isValid){
+            Candidate memory candidate = election.candidates[_candidateId];
+            candidate.isValid = false;
+            candidate.isDelete = true;
+            return (true, MSG_deleteCandidate);
+        }
+        return (false, MSG_missingElection);
+    }
+
+    //Voter à une élection//todo a tester
+    function voteInAnElection(uint8 _electionId, uint8 _voterId, string _name, uint8 _age, uint8 _candidateId) public returns (bool, string) {
+        Election storage election = elections[_electionId];
+        if(election.isValid){
+            Candidate memory candidate = election.candidates[_candidateId];
+            if(candidate.isValid){
+                Voter memory voter = election.voters[_voterId];
+                if(voter.isValid){
+                    return (false, MSG_hasAlreadyVoted);
+                }
+                voter = Voter(_voterId, _name, _age, true);
+
+                election.voters[_voterId] = voter;
+                election.votersKeys.push(_voterId);
+                candidate.nbVoters++;
+                return (true, MSG_hasVoted);
+            }
+            return (false, MSG_missingCandidate);
+        }
+        return (false, MSG_missingElection);
     }
 
     //Retourne les résultats d'une élection
@@ -123,8 +200,7 @@ contract ElectionFactory {
     }
 
     //UTILS
-
-    function _generateRandom(string _str) private view returns (uint8) {
+    function _generateRandom(string _str) private returns (uint8) {
         uint8 random = uint8(keccak256(abi.encodePacked(_str,block.timestamp)));
         return random;
     }
