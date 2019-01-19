@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0x1a8e9a0551427dc0adf59c1630e04f2972f421a2';
-let contractAddress = '0xa55018aa23bc76be73c3594b6957b0016cce22cb';
+let accountAddress = '0xa3cfb8c210251bf5db07971968e058bb347a26d8';
+let contractAddress = '0x508d494e9af4a3d2e9d2518015581a8db2777937';
 
 module.exports = class ElectionFactory {
 
@@ -79,7 +79,7 @@ module.exports = class ElectionFactory {
     }
 
     deleteElectionById(id) {
-        let account = web3.eth.defaultAccount;
+        let account = this.web3.eth.defaultAccount;
 
         try {
             return this.deployedContract.methods.deleteElectionById(id).send({from: account, gas: 3000000}).then(function (results) {

@@ -1,6 +1,15 @@
 pragma solidity ^0.4.23;
 
-contract ElectionFactory {
+import "./ownable.sol";
+
+contract ElectionFactory is Ownable{
+
+    event NewElection(uint8 electionId, string name);
+    event DeleteElection(uint8 electionId, string name);
+
+    event UpdateCandidate(uint8 electionId, uint8 candidateId, string firstName, string lastName);
+    event DeleteCandidate(uint8 electionId, uint8 candidateId, string firstName, string lastName);
+
 
     constructor() public {}
 
@@ -52,7 +61,7 @@ contract ElectionFactory {
     //Créer une élection
     function createElection(string _name, uint _candidatureStart, uint _candidatureEnd, uint _voteStart, uint _voteEnd) public returns (bool state, string message, uint8 id) {
 
-        uint8 createId = _generateRandom(_name);
+        uint8 electionId = _generateRandom(_name);
         Period memory candidaturePeriod = Period(_candidatureStart, _candidatureEnd);
         Period memory votePeriod = Period(_voteStart, _voteEnd);
 
@@ -62,11 +71,12 @@ contract ElectionFactory {
         uint8[] memory votersKeys = new uint8[](1);
         votersKeys[0] = 0;
 
-        Election memory election = Election(createId, _name, candidaturePeriod, votePeriod, candidatesKeys, votersKeys, true, false);
-        elections[createId] = election;
-        electionsKeys.push(createId);
+        Election memory election = Election(electionId, _name, candidaturePeriod, votePeriod, candidatesKeys, votersKeys, true, false);
+        elections[electionId] = election;
+        electionsKeys.push(electionId);
 
-        return (true, MSG_Ok, createId);
+        emit NewElection(electionId, _name);
+        return (true, MSG_Ok, electionId);
     }
 
     //Renvoi la liste des élections valides
@@ -101,7 +111,9 @@ contract ElectionFactory {
         if(election.isValid){
             election.isDeleted = true;
             election.isValid = false;
-            return (true, MSG_Ok);
+            emit DeleteElection(_id, election.name);
+
+        return (true, MSG_Ok);
         }
         return (false, MSG_missingElection);
     }
@@ -122,6 +134,7 @@ contract ElectionFactory {
                 election.candidates[_candidateId] = candidate;
                 election.candidatesKeys.push(_candidateId);
             }
+            emit UpdateCandidate(_electionId, _candidateId, _firstName, _lastName);
             return (true, MSG_Ok);
         }
         return (false, MSG_missingElection);
@@ -168,6 +181,7 @@ contract ElectionFactory {
             Candidate storage candidate = election.candidates[_candidateId];
             candidate.isValid = false;
             candidate.isDelete = true;
+            emit DeleteCandidate(_electionId, _candidateId, candidate.firstName, candidate.lastName);
             return (true, MSG_deleteCandidate);
         }
         return (false, MSG_missingElection);
@@ -239,7 +253,7 @@ contract ElectionFactory {
     }
 
     //UTILS
-    function _generateRandom(string _str) private returns (uint8) {
+    function _generateRandom(string _str) private view returns (uint8) {
         uint8 random = uint8(keccak256(abi.encodePacked(_str,block.timestamp)));
         return random;
     }

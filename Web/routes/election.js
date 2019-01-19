@@ -13,11 +13,20 @@ router.post('/create', function(req, res, next) {
     let election_end_vote = req.body.election_end_vote;
 
     electionContract.createElection(election_name, election_start_candidate, election_end_candidate, election_start_vote, election_end_vote).then( results => {
-        let newId = JSON.parse(JSON.stringify(results));
-        console.log("create "+newId);
-        console.log('CreateElection ID : ' + newId.id);
+        let transactionResult = JSON.parse(JSON.stringify(results));
+        console.log('CreateElection Event : ' + JSON.stringify(transactionResult.events));
     });
 });
+
+router.post('/deleteElectionById', function(req, res, next) {
+    let election_id = req.body.id;
+
+    electionContract.deleteElectionById(election_id).then(result => {
+        let transactionResult = JSON.parse(JSON.stringify(result));
+        console.log('Delete election Event : ' + JSON.stringify(transactionResult.events));
+    });
+});
+
 
 router.post('/getById', function(req, res, next) {
     electionContract.getElectionById(req.body.id).then(result => {
@@ -35,9 +44,8 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
     electionContract.addOrUpdateCandidate(election_id, 1234, "Bob", "Eponge", "Patrick", "google").then( result => {
         console.log('addOrUpdateCandidate response');
 
-        let my_obj_str = JSON.stringify(result);
-
-        console.log('Create Candidate : ' + my_obj_str);
+        let transactionResult = JSON.parse(JSON.stringify(result));
+        console.log('Create Candidate Event : ' + JSON.stringify(transactionResult.events));
     });
 });
 
@@ -65,7 +73,8 @@ router.post('/deleteCandidateById', function(req, res, next) {
     let election_id = req.body.id;
 
     electionContract.deleteCandidateById(election_id, 210).then(result => {
-        console.log('Delete candidate 210: ' + JSON.stringify(result));
+        let transactionResult = JSON.parse(JSON.stringify(result));
+        console.log('Delete candidate Event : ' + JSON.stringify(transactionResult.events));
     });
 });
 

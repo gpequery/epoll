@@ -64,6 +64,14 @@ $j(document).ready(function () {
                 }, 'json');
             });
 
+            $j(document).on('click', "#deleteElection_"+id, function() {
+                $j.post('/election/deleteElectionById', {
+                    id
+                }, function(data) {
+                    //TODO
+                }, 'json');
+            });
+
         }, 'json');
     })
 
@@ -88,7 +96,8 @@ function getElectionToHtml(electionId, election) {
         '<button id="deleteCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test delete candidat</button></br>' +
         '<button id="vote_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test vote</button></br>' +
         '<button id="winner_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test get winner</button></br>' +
-        '<button id="nbVotersByCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test nbVotersByCandidate</button>';
+        '<button id="nbVotersByCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test nbVotersByCandidate</button>' +
+        '<button id="deleteElection_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test deleteElection</button>';
 
 
     html += '<h5 class="card-title">' + stats + '</h5>';
