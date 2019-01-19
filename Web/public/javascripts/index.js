@@ -48,6 +48,22 @@ $j(document).ready(function () {
                 }, 'json');
             });
 
+            $j(document).on('click', "#winner_"+id, function() {
+                $j.post('/election/getElectionWinner', {
+                    id
+                }, function(data) {
+                    //TODO
+                }, 'json');
+            });
+
+            $j(document).on('click', "#nbVotersByCandidate_"+id, function() {
+                $j.post('/election/getCandidateNbVotersById', {
+                    id
+                }, function(data) {
+                    //TODO
+                }, 'json');
+            });
+
         }, 'json');
     })
 
@@ -61,7 +77,7 @@ function getElectionToHtml(electionId, election) {
     let html = '';
     html += '<div class="card text-white bg-dark mt-5 col-4 election" election_' + electionId + '">';
     html += '<div class="card-header">' + election.name + '</div>';
-    html += '<div class="card-body">' +
+    html += '<br class="card-body">' +
         'Début des candidatures :'+ election.candidaturePeriodStart + '</br>' +
         'Fin des candidatures :'+ election.candidaturePeriodEnd + '</br>' +
         'Début des votes :'+ election.votePeriodStart + '</br>' +
@@ -70,7 +86,10 @@ function getElectionToHtml(electionId, election) {
         '<button id="addCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Ajouter un candidat</button></br>' +
         '<button id="getCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test recup candidat</button></br>' +
         '<button id="deleteCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test delete candidat</button></br>' +
-        '<button id="vote_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test vote</button></div>';
+        '<button id="vote_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test vote</button></br>' +
+        '<button id="winner_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test get winner</button></br>' +
+        '<button id="nbVotersByCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test nbVotersByCandidate</button>';
+
 
     html += '<h5 class="card-title">' + stats + '</h5>';
     html += '<p class="card-text">TEXTE ou IMAGE</p>';

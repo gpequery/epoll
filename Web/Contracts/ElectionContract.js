@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0xef3576b6a23012e427e772393492821db88473f1';
-let contractAddress = '0x23b496a000fcf1848f4cc90e53d3b2553bcefaba';
+let accountAddress = '0x1a8e9a0551427dc0adf59c1630e04f2972f421a2';
+let contractAddress = '0xa55018aa23bc76be73c3594b6957b0016cce22cb';
 
 module.exports = class ElectionFactory {
 
@@ -160,6 +160,32 @@ module.exports = class ElectionFactory {
             return this.deployedContract.methods.voteInAnElection(electionId, voterId, name, age, candidateId).send({from: account, gas: 3000000}).then(function (results) {
                 if (!results) {
                     return Promise.reject('Vote error');
+                }
+                return Promise.resolve(results);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    getElectionWinner(electionId) {
+        try {
+            return this.deployedContract.methods.getElectionWinner(electionId).call().then(function (results) {
+                if (!results) {
+                    return Promise.reject('Result error');
+                }
+                return Promise.resolve(results);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    getCandidateNbVotersById(electionId, candidateId) {
+        try {
+            return this.deployedContract.methods.getCandidateNbVotersById(electionId, candidateId).call().then(function (results) {
+                if (!results) {
+                    return Promise.reject('Result error');
                 }
                 return Promise.resolve(results);
             });

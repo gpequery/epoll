@@ -76,4 +76,18 @@ router.post('/voteInAnElection', function(req, res, next) {
     });
 });
 
+router.post('/getElectionWinner', function(req, res, next) {
+    let election_id = req.body.id;
+    electionContract.getElectionWinner(election_id).then(result => {
+        console.log('Le gagnant est : ' + JSON.stringify(result));
+    });
+});
+
+router.post('/getCandidateNbVotersById', function(req, res, next) {
+    let election_id = req.body.id;
+    electionContract.getCandidateNbVotersById(election_id, 210).then(result => {
+        console.log('Le candidat a eu : ' + JSON.stringify(result));
+    });
+});
+
 module.exports = router;

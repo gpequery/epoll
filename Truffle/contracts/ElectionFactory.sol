@@ -148,7 +148,7 @@ contract ElectionFactory {
         return (false, MSG_missingElection, result) ;
     }
 
-    //Renvoi un candidat par ID//todo a tester
+    //Renvoi un candidat par ID
     function getCandidateById(uint8 _electionId, uint8 _candidateId) public view returns (bool, string, string, string, string, string, bool, bool) {
         Election storage election = elections[_electionId];
         if(election.isValid){
@@ -161,7 +161,7 @@ contract ElectionFactory {
         return (false, MSG_missingElection, "0", "0", "0", "0", false, false) ;
     }
 
-    //Supprimer un candidat//todo a tester
+    //Supprimer un candidat
     function deleteCandidate(uint8 _electionId, uint8 _candidateId) public returns (bool, string) {
         Election storage election = elections[_electionId];
         if(election.isValid){
@@ -173,11 +173,11 @@ contract ElectionFactory {
         return (false, MSG_missingElection);
     }
 
-    //Voter à une élection//todo a tester
+    //Voter à une élection
     function voteInAnElection(uint8 _electionId, uint8 _voterId, string _name, uint8 _age, uint8 _candidateId) public returns (bool, string) {
         Election storage election = elections[_electionId];
         if(election.isValid){
-            Candidate memory candidate = election.candidates[_candidateId];
+            Candidate storage candidate = election.candidates[_candidateId];
             if(candidate.isValid){
                 Voter memory voter = election.voters[_voterId];
                 if(voter.isValid){
@@ -196,7 +196,46 @@ contract ElectionFactory {
     }
 
     //Retourne les résultats d'une élection
-    function getElectionResult() pure public {//TODO
+    function getElectionWinner(uint8 _electionId) public view returns (bool, string, uint8[]){
+        Election storage election = elections[_electionId];
+        if(election.isValid){
+            uint8[] memory candidatesKeys = election.candidatesKeys;
+            uint8[] memory winnerIds = new uint8[](candidatesKeys.length);
+            uint8 maxResult = 0;
+            uint8 winnerIdsCount = 0;
+
+            for (uint i=0; i<candidatesKeys.length; i++) {
+                uint8 currentId = candidatesKeys[i];
+                Candidate memory candidate = election.candidates[currentId];
+                if(candidate.isValid){
+
+                        if(maxResult < candidate.nbVoters){
+                            maxResult = candidate.nbVoters;
+                            winnerIds = new uint8[](candidatesKeys.length);
+                            winnerIdsCount = 0;
+                            winnerIds[winnerIdsCount] = candidate.id;
+                        } else if(maxResult == candidate.nbVoters){
+                            winnerIds[winnerIdsCount] = candidate.id;
+                            winnerIdsCount++;
+                        }
+                }
+            }
+            return (true, MSG_Ok, winnerIds);
+        }
+        return (false, MSG_missingElection, winnerIds);
+    }
+
+    //Renvoi le nombre de vote par candidat ID
+    function getCandidateNbVotersById(uint8 _electionId, uint8 _candidateId) public view returns (bool, string, uint8) {
+        Election storage election = elections[_electionId];
+        if(election.isValid){
+            Candidate memory candidate = election.candidates[_candidateId];
+            if(candidate.isValid){
+                return (true, MSG_Ok, candidate.nbVoters) ;
+            }
+            return (false, MSG_missingCandidate, 0) ;
+        }
+        return (false, MSG_missingElection,0) ;
     }
 
     //UTILS
