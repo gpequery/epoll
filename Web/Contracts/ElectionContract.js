@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0xa3cfb8c210251bf5db07971968e058bb347a26d8';
-let contractAddress = '0x508d494e9af4a3d2e9d2518015581a8db2777937';
+let accountAddress = '0x1d071d1a15afdea14ca8364aa3a1720b3545aa1e';
+let contractAddress = '0xd4106a6cce23c834ddef56b8c0cb4c49cbd17a79';
 
 module.exports = class ElectionFactory {
 
@@ -93,10 +93,10 @@ module.exports = class ElectionFactory {
         }
     }
 
-    addOrUpdateCandidate(electionId, candidateId, firstName, lastName, description, pictureUrl) {
+    addOrUpdateCandidate(electionId, firstName, lastName, description, pictureUrl) {
         let account = this.web3.eth.defaultAccount;
         try {
-            return this.deployedContract.methods.addOrUpdateCandidate(electionId, candidateId, firstName, lastName, description, pictureUrl).send({
+            return this.deployedContract.methods.addOrUpdateCandidate(electionId, account, firstName, lastName, description, pictureUrl).send({
                 from: account,
                 gas: 3000000
             }).then(function (results) {
@@ -153,11 +153,11 @@ module.exports = class ElectionFactory {
         }
     }
 
-    voteInAnElection(electionId, voterId, name, age, candidateId) {
+    voteInAnElection(electionId, voterName, voterAge, candidateId) {
         let account = this.web3.eth.defaultAccount;
 
         try {
-            return this.deployedContract.methods.voteInAnElection(electionId, voterId, name, age, candidateId).send({from: account, gas: 3000000}).then(function (results) {
+            return this.deployedContract.methods.voteInAnElection(electionId, account, voterName, voterAge, candidateId).send({from: account, gas: 3000000}).then(function (results) {
                 if (!results) {
                     return Promise.reject('Vote error');
                 }

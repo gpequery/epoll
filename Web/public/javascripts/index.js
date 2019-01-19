@@ -91,7 +91,7 @@ function getElectionToHtml(electionId, election) {
         'Début des votes :'+ election.votePeriodStart + '</br>' +
         'Fin des votes :'+ election.votePeriodEnd + '</br>' +
         '<button id="candidateList_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Liste des candidats</button></br>' +
-        '<button id="addCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Ajouter un candidat</button></br>' +
+        '<button id="addCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Se présenter en tant que candidat</button></br>' +
         '<button id="getCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test recup candidat</button></br>' +
         '<button id="deleteCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test delete candidat</button></br>' +
         '<button id="vote_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test vote</button></br>' +

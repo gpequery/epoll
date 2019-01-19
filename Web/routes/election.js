@@ -41,7 +41,7 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
     let election_id = req.body.id;
     console.log('addOrUpdateCandidate'+election_id);
 
-    electionContract.addOrUpdateCandidate(election_id, 1234, "Bob", "Eponge", "Patrick", "google").then( result => {
+    electionContract.addOrUpdateCandidate(election_id, "Bob", "Eponge", "Patrick", "google").then( result => {
         console.log('addOrUpdateCandidate response');
 
         let transactionResult = JSON.parse(JSON.stringify(result));
@@ -61,7 +61,7 @@ router.post('/getCandidateList', function(req, res, next) {
 router.post('/getCandidateById', function(req, res, next) {
     let election_id = req.body.id;
 
-    electionContract.getCandidateById(election_id, 210).then(result => {
+    electionContract.getCandidateById(election_id, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
         let candidate = JSON.parse(JSON.stringify(result));
         console.log('Candidate 210: ' + JSON.stringify(result));
 
@@ -72,7 +72,7 @@ router.post('/getCandidateById', function(req, res, next) {
 router.post('/deleteCandidateById', function(req, res, next) {
     let election_id = req.body.id;
 
-    electionContract.deleteCandidateById(election_id, 210).then(result => {
+    electionContract.deleteCandidateById(election_id, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
         let transactionResult = JSON.parse(JSON.stringify(result));
         console.log('Delete candidate Event : ' + JSON.stringify(transactionResult.events));
     });
@@ -80,7 +80,7 @@ router.post('/deleteCandidateById', function(req, res, next) {
 
 router.post('/voteInAnElection', function(req, res, next) {
     let election_id = req.body.id;
-    electionContract.voteInAnElection(election_id, 456, "Batman", 25, 210).then(result => {
+    electionContract.voteInAnElection(election_id, "Batman", 25, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
         console.log('Vote de Batman : ' + JSON.stringify(result));
     });
 });
@@ -94,7 +94,7 @@ router.post('/getElectionWinner', function(req, res, next) {
 
 router.post('/getCandidateNbVotersById', function(req, res, next) {
     let election_id = req.body.id;
-    electionContract.getCandidateNbVotersById(election_id, 210).then(result => {
+    electionContract.getCandidateNbVotersById(election_id, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
         console.log('Le candidat a eu : ' + JSON.stringify(result));
     });
 });
