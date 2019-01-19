@@ -61,7 +61,7 @@ router.post('/getCandidateList', function(req, res, next) {
 router.post('/getCandidateById', function(req, res, next) {
     let election_id = req.body.id;
 
-    electionContract.getCandidateById(election_id, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
+    electionContract.getCandidateById(election_id, "0xe1009458C3DEFffBb97A778615820a81809Ffdb5").then(result => {
         let candidate = JSON.parse(JSON.stringify(result));
         console.log('Candidate 210: ' + JSON.stringify(result));
 
@@ -72,7 +72,7 @@ router.post('/getCandidateById', function(req, res, next) {
 router.post('/deleteCandidateById', function(req, res, next) {
     let election_id = req.body.id;
 
-    electionContract.deleteCandidateById(election_id, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
+    electionContract.deleteCandidateById(election_id).then(result => {
         let transactionResult = JSON.parse(JSON.stringify(result));
         console.log('Delete candidate Event : ' + JSON.stringify(transactionResult.events));
     });
@@ -80,7 +80,7 @@ router.post('/deleteCandidateById', function(req, res, next) {
 
 router.post('/voteInAnElection', function(req, res, next) {
     let election_id = req.body.id;
-    electionContract.voteInAnElection(election_id, "Batman", 25, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
+    electionContract.voteInAnElection(election_id, "Batman", 25, "0xe1009458C3DEFffBb97A778615820a81809Ffdb5").then(result => {
         console.log('Vote de Batman : ' + JSON.stringify(result));
     });
 });
@@ -94,7 +94,7 @@ router.post('/getElectionWinner', function(req, res, next) {
 
 router.post('/getCandidateNbVotersById', function(req, res, next) {
     let election_id = req.body.id;
-    electionContract.getCandidateNbVotersById(election_id, "0x1D071D1A15AFDEa14CA8364aA3A1720B3545aA1E").then(result => {
+    electionContract.getCandidateNbVotersById(election_id, "0xe1009458C3DEFffBb97A778615820a81809Ffdb5").then(result => {
         console.log('Le candidat a eu : ' + JSON.stringify(result));
     });
 });

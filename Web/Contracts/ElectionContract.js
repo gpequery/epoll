@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0x1d071d1a15afdea14ca8364aa3a1720b3545aa1e';
-let contractAddress = '0xd4106a6cce23c834ddef56b8c0cb4c49cbd17a79';
+let accountAddress = '0xe1009458c3defffbb97a778615820a81809ffdb5';
+let contractAddress = '0xf0e4f3799fcb40cb7ca4e3eb65f3b239ec821f93';
 
 module.exports = class ElectionFactory {
 
@@ -96,7 +96,7 @@ module.exports = class ElectionFactory {
     addOrUpdateCandidate(electionId, firstName, lastName, description, pictureUrl) {
         let account = this.web3.eth.defaultAccount;
         try {
-            return this.deployedContract.methods.addOrUpdateCandidate(electionId, account, firstName, lastName, description, pictureUrl).send({
+            return this.deployedContract.methods.addOrUpdateCandidate(electionId, firstName, lastName, description, pictureUrl).send({
                 from: account,
                 gas: 3000000
             }).then(function (results) {
@@ -125,9 +125,9 @@ module.exports = class ElectionFactory {
         }
     }
 
-    getCandidateById(electionId, contractId) {
+    getCandidateById(electionId, candidateId) {
         try {
-            return this.deployedContract.methods.getCandidateById(electionId, contractId).call().then(function (results) {
+            return this.deployedContract.methods.getCandidateById(electionId, candidateId).call().then(function (results) {
                 if (!results) {
                     return Promise.reject('Candidate Not found');
                 }
@@ -138,11 +138,11 @@ module.exports = class ElectionFactory {
         }
     }
 
-    deleteCandidateById(electionId, candidateId) {
+    deleteCandidateById(electionId) {
         let account = this.web3.eth.defaultAccount;
 
         try {
-            return this.deployedContract.methods.deleteCandidate(electionId, candidateId).send({from: account, gas: 3000000}).then(function (results) {
+            return this.deployedContract.methods.deleteCandidate(electionId).send({from: account, gas: 3000000}).then(function (results) {
                 if (!results) {
                     return Promise.reject('Candidate Not found');
                 }
@@ -157,7 +157,7 @@ module.exports = class ElectionFactory {
         let account = this.web3.eth.defaultAccount;
 
         try {
-            return this.deployedContract.methods.voteInAnElection(electionId, account, voterName, voterAge, candidateId).send({from: account, gas: 3000000}).then(function (results) {
+            return this.deployedContract.methods.voteInAnElection(electionId, voterName, voterAge, candidateId).send({from: account, gas: 3000000}).then(function (results) {
                 if (!results) {
                     return Promise.reject('Vote error');
                 }
