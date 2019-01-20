@@ -7,27 +7,23 @@
                     <span aria-hidden="true">X</span>
                 </button>
             </div>
-            <div class="modal-body ml-auto mr-auto">
-                <input type="text" name="election_name" placeholder="Libellé de l'élection" class="text-center"/>
-            </div>
-            <label class="description" for="element_2">Début de la période de candidature :</label>
-            <div  class="modal-body ml-auto mr-auto">
-                <input type="date" name="election_start_candidate">
-            </div>
-            <label class="description" for="element_3">Fin de la période de candidature :</label>
-            <div  class="modal-body ml-auto mr-auto">
-                <input type="date" name="election_end_candidate">
-            </div>
-            <label class="description" for="element_4">Début de la période de vote :</label>
-            <div  class="modal-body ml-auto mr-auto">
-                <input type="date" name="election_start_vote">
-            </div>
-            <label class="description" for="element_5">Fin de la période de vote :</label>
-            <div  class="modal-body ml-auto mr-auto">
-                <input type="date" name="election_end_vote">
+            <div class="modal-body m-1 row justify-content-center">
+                <input type="text" name="election_name" placeholder="Libellé de l'élection" class="col-10 mb-3"/>
+
+                <label class="col-5 mb-3" for="election_start_candidate">Début candidature :</label>
+                <input class="col-5 mb-3" number="1" type="date" name="election_start_candidate">
+
+                <label class="col-5 mb-3" for="election_end_candidate">Fin de candidature :</label>
+                <input class="col-5 mb-3" number="2" type="date" name="election_end_candidate">
+
+                <label class="col-5 mb-3" for="election_start_vote">Début de vote :</label>
+                <input class="col-5 mb-3" number="3" type="date" name="election_start_vote">
+
+                <label class="col-5 mb-3" for="election_end_vote">Fin de vote :</label>
+                <input class="col-5 mb-3" number="4" type="date" name="election_end_vote">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary submit">Ajouter</button>
+                <input type="submit" class="btn btn-primary submit d-none" value="Ajouter" />
             </div>
         </div>
     </div>
