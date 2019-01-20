@@ -50,8 +50,9 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
 });
 
 router.post('/getCandidateList', function(req, res, next) {
-    console.log('getCandidateList');
     let election_id = req.body.id;
+
+    console.log('getCandidateList : ' + election_id);
 
     electionContract.getCandidateList(election_id).then( results => {
         console.log('CandidateList'+election_id+' : ' + JSON.stringify(results));

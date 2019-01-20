@@ -18,13 +18,16 @@ $j(document).ready(function() {
             election_start_vote: election_start_vote,
             election_end_vote: election_end_vote
         }, function(data) {
+            //DOES NOT WORK ... CLOSE MODAL BOOTSTRAP
             $j('#modal-new-election').modal('hide');
         }, 'json');
     });
 
-    $j('#modal-new-election input').not(':input[type=submit]').on('change, keyup', function() {
+    $j('#modal-new-election input, #modal-new-candidat input').not(':input[type=submit]').on('change, keyup', function() {
         let toShow = true;
-        $j('#modal-new-election input').each(function() {
+        let modal = $j('#' + $j(this).closest('.modal').attr('id'));
+
+        modal.find('input').each(function() {
             if($j(this).val() === '') {
                 toShow = false;
                 return false;
@@ -32,13 +35,11 @@ $j(document).ready(function() {
         });
 
         if(toShow) {
-            $j('#modal-new-election input[type=submit]').removeClass('d-none');
+            modal.find('input[type=submit]').removeClass('d-none');
         } else {
-            $j('#modal-new-election input[type=submit]').addClass('d-none');
+            modal.find('input[type=submit]').addClass('d-none');
         }
     });
-
-
 
     $j('#modal-new-election input[type="date"]').on('change', function() {
         let maxIndex = $j('#modal-new-election input[type="date"]').length;

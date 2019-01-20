@@ -7,9 +7,7 @@ let accountAddress = '0xbfd22e09137cabac152c1814074bf98672ab3f99';
 let contractAddress = '0x331a273d21f2becc2810291c812ba90fb34a1eb5';
 
 module.exports = class ElectionFactory {
-
     constructor() {
-
         if (typeof this.web3 !== 'undefined') {
             this.web3 = new Web3(web3.currentProvider);
         } else {
