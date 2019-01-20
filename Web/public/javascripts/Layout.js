@@ -18,7 +18,7 @@ $j(document).ready(function() {
             election_start_vote: election_start_vote,
             election_end_vote: election_end_vote
         }, function(data) {
-            $j('#modal-new-election').addClass('d-none');
+            $j('#modal-new-election').modal('hide');
         }, 'json');
     });
 
@@ -32,10 +32,8 @@ $j(document).ready(function() {
         });
 
         if(toShow) {
-            console.log('Show !');
             $j('#modal-new-election input[type=submit]').removeClass('d-none');
         } else {
-            console.log('Hide !');
             $j('#modal-new-election input[type=submit]').addClass('d-none');
         }
     });
