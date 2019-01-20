@@ -23,7 +23,8 @@ $j(document).ready(function () {
     });
 
 
-    $j(document).on( "click", ".new-candidat-modal", function() {
+    $j('#container').on( "click", ".new-candidat-modal", function() {
+        console.log('ici');
         $j('#modal-new-candidat input[name=election_id]').val($j(this).closest('.election').attr('data-id'));
     });
 
