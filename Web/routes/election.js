@@ -15,6 +15,7 @@ router.post('/create', function(req, res, next) {
     electionContract.createElection(election_name, election_start_candidate, election_end_candidate, election_start_vote, election_end_vote).then( results => {
         let transactionResult = JSON.parse(JSON.stringify(results));
         console.log('CreateElection Event : ' + JSON.stringify(transactionResult.events));
+        res.send(true);
     });
 });
 
@@ -37,15 +38,25 @@ router.post('/getById', function(req, res, next) {
 });
 
 router.post('/addOrUpdateCandidate', function(req, res, next) {
-    console.log('addOrUpdateCandidate');
-    let election_id = req.body.id;
-    console.log('addOrUpdateCandidate'+election_id);
+    let election_id = req.body.election_id;
+    let firstname = req.body.firstname;
+    let lastname = req.body.lastname;
+    let description = req.body.description;
+    let image = req.body.image;
 
-    electionContract.addOrUpdateCandidate(election_id, "Bob", "Eponge", "Patrick", "google").then( result => {
+    console.log('addOrUpdateCandidate : ' + election_id);
+    console.log('firstname : ' + firstname);
+    console.log('lastname : ' + lastname);
+    console.log('description : ' + description);
+    console.log('image : ' + image);
+
+    electionContract.addOrUpdateCandidate(election_id, firstname, lastname, description, image).then( result => {
         console.log('addOrUpdateCandidate response');
 
         let transactionResult = JSON.parse(JSON.stringify(result));
         console.log('Create Candidate Event : ' + JSON.stringify(transactionResult.events));
+
+        res.send(true);
     });
 });
 

@@ -8,13 +8,14 @@
                 </button>
             </div>
             <div class="modal-body m-1 row justify-content-center">
-                <input class="col-5 form-control m-1" type=text placeholder="Nom" />
-                <input class="col-5 form-control m-1" type=text placeholder="Prénom" />
-                <input class="col-10 form-control m-1" type=text placeholder="Déscription" />
-                <input class="col-10 form-control m-1" type=text placeholder="URL Image" />
+                <input type=hidden name="election_id" value="36" />
+                <input class="col-5 form-control m-1" type=text name="firstname" placeholder="Prénom" />
+                <input class="col-5 form-control m-1" type=text name="lastname" placeholder="Nom" />
+                <input class="col-10 form-control m-1" type=text name="description" placeholder="Déscription" />
+                <input class="col-10 form-control m-1" type=text name= "image" placeholder="URL Image" />
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary submit d-none" value="Ajouter" />
+                <input type="submit" class="btn btn-primary submit " value="Ajouter" />
             </div>
         </div>
     </div>
