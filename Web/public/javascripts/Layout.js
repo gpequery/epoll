@@ -22,6 +22,11 @@ $j(document).ready(function () {
         }, 'json');
     });
 
+
+    $j(document).on( "click", ".new-candidat-modal", function() {
+        $j('#modal-new-candidat input[name=election_id]').val($j(this).closest('.election').attr('data-id'));
+    });
+
     $j('#modal-new-candidat .submit').on('click', function () {
         let dialog = $j('#modal-new-candidat');
 
