@@ -61,19 +61,19 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
 });
 
 router.post('/getCandidateList', function(req, res, next) {
-    let election_id = req.body.id;
-
-    console.log('getCandidateList : ' + election_id);
+    let election_id = req.body.election_id;
 
     electionContract.getCandidateList(election_id).then( results => {
-        console.log('CandidateList'+election_id+' : ' + JSON.stringify(results));
+        console.log(JSON.stringify(results));
+        res.send(results);
     });
 });
 
 router.post('/getCandidateById', function(req, res, next) {
-    let election_id = req.body.id;
+    let election_id = req.body.election_id;
+    let candidate_id = req.body.candidate_id;
 
-    electionContract.getCandidateById(election_id, "0xe1009458C3DEFffBb97A778615820a81809Ffdb5").then(result => {
+    electionContract.getCandidateById(election_id, candidate_id).then(result => {
         let candidate = JSON.parse(JSON.stringify(result));
         console.log('Candidate 210: ' + JSON.stringify(result));
 
