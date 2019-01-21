@@ -72,8 +72,14 @@ $j(document).ready(function () {
         })
     }
 
-    $j('.election .addCandidat').on('click', function (event) {
-        console.log('Click');
+    $j('body').on('click', '.removeCandidate', function (event) {
+        let election_id = $j(this).attr('data-election-id');
+        let candidate_id = $j(this).attr('data-candidate-id');
+
+        console.log(election_id);
+        console.log(candidate_id);
+
+        //TODO AFTER FIX candidateList
     });
 });
 
@@ -86,7 +92,7 @@ function printCandidatsByElectionId(electionId) {
             election_id: electionId,
             candidate_id: data[2][0]
         }, function(candidate) {
-            let html = getCandidateToHtmlRow(candidate);
+            let html = getCandidateToHtmlRow(candidate, electionId, data[2][0]);
             $j('#table-candidate tbody').append(html);
             console.log(candidate);
         }, 'json');
@@ -95,7 +101,7 @@ function printCandidatsByElectionId(electionId) {
     return null;
 }
 
-function getCandidateToHtmlRow(candidate) {
+function getCandidateToHtmlRow(candidate, election_id, candidate_id) {
     let html = '';
 
     html += '<tr>';
@@ -103,6 +109,7 @@ function getCandidateToHtmlRow(candidate) {
     html +=     '<td>' + candidate[3] + '</td>';
     html +=     '<td>' + candidate[4] + '</td>';
     html +=     '<td>' + candidate[5] + '</td>';
+    html +=     '<td class="removeCandidate cursor-pointer" data-election-id="' + election_id + '" data-candidate-id="' + candidate_id + '">x</td>';
     html += '</tr>';
 
     return html;
@@ -113,7 +120,7 @@ function getElectionToHtml(electionId, election, candidats = 'Greg') {
 
     let html = '';
     html += '<div class="card text-white bg-dark mt-5 col-5 election" data-id="' + electionId + '">';
-    html += '<h2 class="card-header">' + election.name + '</h2>';
+    html += '<h2 class="card-header row"><span class="col-11">' + election.name + '</span><span class="col-1">X</span></h2>';
     html += '<div class="card-body row justify-content-center">';
     html += '<h5 class="card-title col-12">' + stats + '</h5>';
     html += '<div class="col-5 font-weight-bold">Début des candidatures : </div>';
@@ -129,7 +136,8 @@ function getElectionToHtml(electionId, election, candidats = 'Greg') {
     html += '<div class="col-3">' + getDateHtmlFromTimeStamp(election.votePeriodEnd) + '</div>';
 
     html += '<div class="card-text col-12 mt-4">';
-    html += '<table class="table table-dark table-striped" id="table-candidate"><thead><tr><th>Prénom</th><th>Nom</th><th>Description</th><th>Image</th></tr></thead><tbody></tbody></table>';
+    html += '<table class="table table-dark table-striped"' +
+        ' id="table-candidate"><thead><tr><th>Prénom</th><th>Nom</th><th>Description</th><th>Image</th><th></th></th></tr></thead><tbody></tbody></table>';
     html += '<input class="btn btn-outline-success col-5 new-candidat-modal" data-toggle="modal" data-target="#modal-new-candidat" value="Ajouter candidat" type="submit"/>';
     html += '</div>';
     html += '</div>';
