@@ -108,7 +108,7 @@ function getElectionToHtml(electionId, election, candidats = 'Greg') {
 
     let html = '';
     html += '<div class="card text-white bg-dark mt-5 col-5 election" data-id="' + electionId + '">';
-    html += '<h2 class="card-header row"><span class="col-11">' + election.name + '</span><span class="col-1 cursor-pointer deleteElection">X</span></h2>';
+    html += '<h2 class="card-header row"><span class="col-11">' + election.name + '</span><span class="col-1 cursor-pointer text-danger deleteElection">X</span></h2>';
     html += '<div class="card-body row justify-content-center">';
     html += '<h5 class="card-title col-12">' + stats + '</h5>';
     html += '<div class="col-5 font-weight-bold">Début des candidatures : </div>';
@@ -124,9 +124,13 @@ function getElectionToHtml(electionId, election, candidats = 'Greg') {
     html += '<div class="col-3">' + getDateHtmlFromTimeStamp(election.votePeriodEnd) + '</div>';
 
     html += '<div class="card-text col-12 mt-4">';
-    html += '<table class="table table-dark table-striped"' +
-        ' id="table-candidate"><thead><tr><th>Prénom</th><th>Nom</th><th>Description</th><th>Image</th><th></th></th></tr></thead><tbody></tbody></table>';
+    html += '<table class="table table-dark table-striped"id="table-candidate">';
+    html += '<thead><tr><th>Prénom</th><th>Nom</th><th>Description</th><th>Image</th><th></th></th></tr></thead><tbody></tbody>';
+    html += '</table>';
+    html += '<div class="row justify-content-around">';
     html += '<input class="btn btn-outline-success col-5 new-candidat-modal" data-toggle="modal" data-target="#modal-new-candidat" value="Ajouter candidat" type="submit"/>';
+    html += '<input class="btn btn-outline-success col-5 offset-1" value="TODO" type="submit"/>';
+    html += '</div>';
     html += '</div>';
     html += '</div>';
     html += '</div>';
