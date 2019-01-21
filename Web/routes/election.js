@@ -20,11 +20,10 @@ router.post('/create', function(req, res, next) {
 });
 
 router.post('/deleteElectionById', function(req, res, next) {
-    let election_id = req.body.id;
+    let election_id = req.body.election_id;
 
     electionContract.deleteElectionById(election_id).then(result => {
-        let transactionResult = JSON.parse(JSON.stringify(result));
-        console.log('Delete election Event : ' + JSON.stringify(transactionResult.events));
+        res.send(result)
     });
 });
 
@@ -44,19 +43,8 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
     let description = req.body.description;
     let image = req.body.image;
 
-    console.log('addOrUpdateCandidate : ' + election_id);
-    console.log('firstname : ' + firstname);
-    console.log('lastname : ' + lastname);
-    console.log('description : ' + description);
-    console.log('image : ' + image);
-
     electionContract.addOrUpdateCandidate(election_id, firstname, lastname, description, image).then( result => {
-        console.log('addOrUpdateCandidate response');
-
-        let transactionResult = JSON.parse(JSON.stringify(result));
-        console.log('Create Candidate Event : ' + JSON.stringify(transactionResult.events));
-
-        res.send(true);
+        res.send(result);
     });
 });
 
@@ -64,7 +52,6 @@ router.post('/getCandidateList', function(req, res, next) {
     let election_id = req.body.election_id;
 
     electionContract.getCandidateList(election_id).then( results => {
-        console.log(JSON.stringify(results));
         res.send(results);
     });
 });
@@ -74,10 +61,7 @@ router.post('/getCandidateById', function(req, res, next) {
     let candidate_id = req.body.candidate_id;
 
     electionContract.getCandidateById(election_id, candidate_id).then(result => {
-        let candidate = JSON.parse(JSON.stringify(result));
-        console.log('Candidate 210: ' + JSON.stringify(result));
-
-        res.send(candidate);
+        res.send(result);
     });
 });
 

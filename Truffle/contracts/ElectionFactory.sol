@@ -89,7 +89,7 @@ contract ElectionFactory is Ownable{
         for (uint i=0; i<electionsKeys.length; i++) {
             uint currentId = electionsKeys[i];
             Election memory election = elections[currentId];
-            if(election.isValid){
+            if(election.isValid && !election.isDeleted){
                 result[count] = currentId;
                 count++;
             }

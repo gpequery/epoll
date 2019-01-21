@@ -11,31 +11,6 @@ $j(document).ready(function () {
                 $j('#electionIndexContent').append(getElectionToHtml(id, election));
                 printCandidatsByElectionId(id);
 
-
-                // $j(document).on('click', "#candidateList_"+id, function() {
-                //     $j.post('/election/getCandidateList', {
-                //         id
-                //     }, function(data) {
-                //         //TODO
-                //     }, 'json');
-                // });
-                //
-                // $j(document).on('click', "#getCandidate_"+id, function() {
-                //     $j.post('/election/getCandidateById', {
-                //         id
-                //     }, function(data) {
-                //         //TODO
-                //     }, 'json');
-                // });
-                //
-                // $j(document).on('click', "#deleteCandidate_"+id, function() {
-                //     $j.post('/election/deleteCandidateById', {
-                //         id
-                //     }, function(data) {
-                //         //TODO
-                //     }, 'json');
-                // });
-                //
                 // $j(document).on('click', "#vote_"+id, function() {
                 //     $j.post('/election/voteInAnElection', {
                 //         id
@@ -73,13 +48,26 @@ $j(document).ready(function () {
     }
 
     $j('body').on('click', '.removeCandidate', function (event) {
-        let election_id = $j(this).attr('data-election-id');
-        let candidate_id = $j(this).attr('data-candidate-id');
+        if(confirm('Supprimer le candidat ?')) {
+            let election_id = $j(this).attr('data-election-id');
+            let candidate_id = $j(this).attr('data-candidate-id');
 
-        console.log(election_id);
-        console.log(candidate_id);
+            console.log(election_id);
+            console.log(candidate_id);
 
-        //TODO AFTER FIX candidateList
+            //TODO AFTER FIX candidateList
+        }
+    });
+
+    $j('body').on('click', '.deleteElection', function (event) {
+        if(confirm('Supprimer l\'election ?')) {
+            $j.post('/election/deleteElectionById', {
+                election_id: $j(this).closest('.election').attr('data-id')
+            }, function(data) {
+                console.log(data);
+                location.reload();
+            }, 'json');
+        }
     });
 });
 
@@ -120,7 +108,7 @@ function getElectionToHtml(electionId, election, candidats = 'Greg') {
 
     let html = '';
     html += '<div class="card text-white bg-dark mt-5 col-5 election" data-id="' + electionId + '">';
-    html += '<h2 class="card-header row"><span class="col-11">' + election.name + '</span><span class="col-1">X</span></h2>';
+    html += '<h2 class="card-header row"><span class="col-11">' + election.name + '</span><span class="col-1 cursor-pointer deleteElection">X</span></h2>';
     html += '<div class="card-body row justify-content-center">';
     html += '<h5 class="card-title col-12">' + stats + '</h5>';
     html += '<div class="col-5 font-weight-bold">Début des candidatures : </div>';
@@ -143,9 +131,6 @@ function getElectionToHtml(electionId, election, candidats = 'Greg') {
     html += '</div>';
     html += '</div>';
 
-    // '<button id="candidateList_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Liste des candidats</button></br>' +
-    // '<button id="getCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test recup candidat</button></br>' +
-    // '<button id="deleteCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test delete candidat</button></br>' +
     // '<button id="vote_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test vote</button></br>' +
     // '<button id="winner_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test get winner</button></br>' +
     // '<button id="nbVotersByCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test nbVotersByCandidate</button>' +
