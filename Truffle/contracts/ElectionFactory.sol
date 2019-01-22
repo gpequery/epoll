@@ -4,29 +4,32 @@ import "./ownable.sol";
 
 contract ElectionFactory is Ownable{
 
-    event NewElection(uint electionId, string name);
-    event DeleteElection(uint electionId, string name);
+    event NewElection(uint electionId, bytes32 name);
+    event DeleteElection(uint electionId, bytes32 name);
 
-    event UpdateCandidate(uint electionId, address candidateId, string firstName, string lastName);
-    event DeleteCandidate(uint electionId, address candidateId, string firstName, string lastName);
+    event UpdateCandidate(uint electionId, address candidateId, bytes32 firstName, bytes32 lastName);
+    event DeleteCandidate(uint electionId, address candidateId, bytes32 firstName, bytes32 lastName);
 
 
-    constructor() public {}
+    constructor() public {
+        owner = msg.sender;
+    }
 
     struct Candidate {
         address id;
-        string firstName;
-        string lastName;
-        string description;
-        string pictureUrl;
+        bytes32 firstName;
+        bytes32 lastName;
+        bytes32 description;
+        bytes32 pictureUrl;
         uint nbVoters;
+        uint score;
         bool isValid;
         bool isDelete;
     }
 
     struct Voter {
         address id;
-        string name;
+        bytes32 name;
         uint age;
         bool isValid;
     }
@@ -38,7 +41,7 @@ contract ElectionFactory is Ownable{
 
     struct Election {
         uint id;
-        string name;
+        bytes32 name;
         Period candidaturePeriod;
         Period votePeriod;
         mapping (address => Candidate) candidates;
@@ -58,20 +61,18 @@ contract ElectionFactory is Ownable{
     string private MSG_hasAlreadyVoted = "A déjà voté.";
     string private MSG_hasVoted = "A voté.";
     string private MSG_Ok = "Ok.";
-    string private MSG_NotOwner = "Vous n'êtes pas le propriétaire de cette éléction";
+    string private MSG_NotOwner = "Vous n'êtes pas le propriétaire de cette éléction.";
+    string private MSG_wrongPeriod = "Ce n'est pas le bon moment.";
 
     //Créer une élection
-    function createElection(string _name, uint _candidatureStart, uint _candidatureEnd, uint _voteStart, uint _voteEnd) public returns (bool state, string message, uint id) {
+    function createElection(bytes32 _name, uint _candidatureStart, uint _candidatureEnd, uint _voteStart, uint _voteEnd) public returns (bool state, string message, uint id) {
 
         uint electionId = _generateRandom(_name);
         Period memory candidaturePeriod = Period(_candidatureStart, _candidatureEnd);
         Period memory votePeriod = Period(_voteStart, _voteEnd);
 
-        address[] memory candidatesKeys = new address[](1);
-        candidatesKeys[0] = 0;
-
-        address[] memory votersKeys = new address[](1);
-        votersKeys[0] = 0;
+        address[] memory candidatesKeys = new address[](0);
+        address[] memory votersKeys = new address[](0);
 
         Election memory election = Election(electionId, _name, candidaturePeriod, votePeriod, candidatesKeys, votersKeys, true, false, msg.sender);
         elections[electionId] = election;
@@ -83,27 +84,40 @@ contract ElectionFactory is Ownable{
 
     //Renvoi la liste des élections valides
     function getElectionsList() public view returns (bool state, string message,  uint[] ids) {
-        uint[] memory result = new uint[](electionsKeys.length);
+        uint[] memory tmpResult = new uint[](electionsKeys.length);
         uint count = 0;
 
         for (uint i=0; i<electionsKeys.length; i++) {
             uint currentId = electionsKeys[i];
             Election memory election = elections[currentId];
             if(election.isValid){
-                result[count] = currentId;
+                tmpResult[count] = currentId;
                 count++;
             }
         }
-        return (true, MSG_Ok, result);
+        uint[] memory result = new uint[](count);
+        for (uint j=0; j<count; j++) {
+                result[j] = tmpResult[j];
+        }
+
+    return (true, MSG_Ok, result);
     }
 
     //Renvoi une election par ID
-    function getElectionById(uint _id) public view returns (bool state, string message, string name, uint candidaturePeriodStart, uint candidaturePeriodEnd,  uint votePeriodStart, uint votePeriodEnd, bool isValid, bool isDeleted) {
+    function getElectionById(uint _id) public view returns (bool state, string message, bytes32 name, bool isValid, bool isDeleted) {
         Election memory election = elections[_id];
         if(election.isValid){
-            return (true, MSG_Ok, election.name, election.candidaturePeriod.start, election.candidaturePeriod.end, election.votePeriod.start, election.votePeriod.end, election.isValid, election.isDeleted) ;
+            return (true, MSG_Ok, election.name, election.isValid, election.isDeleted) ;
         }
-        return (false, MSG_missingElection, "0", 0, 0, 0, 0, false, false) ;
+        return (false, MSG_missingElection, "0", false, false) ;
+    }
+
+    function getElectionPeriodById(uint _id) public view returns (bool state, string message, uint candidaturePeriodStart, uint candidaturePeriodEnd,  uint votePeriodStart, uint votePeriodEnd) {
+        Election memory election = elections[_id];
+        if(election.isValid){
+            return (true, MSG_Ok, election.candidaturePeriod.start, election.candidaturePeriod.end, election.votePeriod.start, election.votePeriod.end) ;
+        }
+        return (false, MSG_missingElection, 0, 0, 0, 0) ;
     }
 
     //Supprime une élection
@@ -125,23 +139,27 @@ contract ElectionFactory is Ownable{
     }
 
     //Ajoute ou modifie les informations d'un candidat
-    function addOrUpdateCandidate(uint _electionId, string _firstName, string _lastName, string _description, string _pictureUrl) public returns (bool, string) {
+    function addOrUpdateCandidate(uint _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool, string) {
         Election storage election = elections[_electionId];
-        //TODO On vérifie que l'on est dans la période de candidature
         if(election.isValid){
-            Candidate storage existCandidate = election.candidates[msg.sender];
-            if(existCandidate.isValid && existCandidate.id == msg.sender){
-                existCandidate.firstName = _firstName;
-                existCandidate.lastName = _lastName;
-                existCandidate.description = _description;
-                existCandidate.pictureUrl = _pictureUrl;
-            } else {
-                Candidate memory candidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, true, false);
-                election.candidates[msg.sender] = candidate;
-                election.candidatesKeys.push(msg.sender);
+            Period memory candidaturePeriod =  election.candidaturePeriod;
+            uint currentTime = now;
+            if(currentTime >= candidaturePeriod.start && currentTime < candidaturePeriod.end){
+                Candidate storage existCandidate = election.candidates[msg.sender];
+                if(existCandidate.isValid && existCandidate.id == msg.sender){
+                    existCandidate.firstName = _firstName;
+                    existCandidate.lastName = _lastName;
+                    existCandidate.description = _description;
+                    existCandidate.pictureUrl = _pictureUrl;
+                } else {
+                    Candidate memory candidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
+                    election.candidates[msg.sender] = candidate;
+                    election.candidatesKeys.push(msg.sender);
+                }
+                emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
+                return (true, MSG_Ok);
             }
-            emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
-            return (true, MSG_Ok);
+            return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
     }
@@ -168,7 +186,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi un candidat par ID
-    function getCandidateById(uint _electionId, address _candidateId) public view returns (bool, string, string, string, string, string, bool, bool) {
+    function getCandidateById(uint _electionId, address _candidateId) public view returns (bool, string, bytes32, bytes32, bytes32, bytes32, bool, bool) {
         Election storage election = elections[_electionId];
         if(election.isValid){
             Candidate memory candidate = election.candidates[_candidateId];
@@ -197,13 +215,14 @@ contract ElectionFactory is Ownable{
     }
 
     //Voter à une élection
-    function voteInAnElection(uint _electionId, string _name, uint _age, address _candidateId) public returns (bool, string) {
-    //TODO On vérifie que l'on est dans la période de vote
+    //Prise en compte de 3 votes maximum avec un nombre de point décroissnat
+    function voteInAnElection(uint _electionId, bytes32 _name, uint _age, address[] _candidatesId) public returns (bool, string) {
 
     Election storage election = elections[_electionId];
         if(election.isValid){
-            Candidate storage candidate = election.candidates[_candidateId];
-            if(candidate.isValid){
+            Period memory votePeriod =  election.votePeriod;
+            uint currentTime = now;
+            if(currentTime >= votePeriod.start && currentTime < votePeriod.end){
                 Voter memory voter = election.voters[msg.sender];
                 if(voter.isValid){
                     return (false, MSG_hasAlreadyVoted);
@@ -212,10 +231,17 @@ contract ElectionFactory is Ownable{
 
                 election.voters[msg.sender] = voter;
                 election.votersKeys.push(msg.sender);
-                candidate.nbVoters++;
+
+                for(uint i = 0; i < election.candidatesKeys.length; i++){
+                    Candidate storage candidate = election.candidates[_candidatesId[i]];
+                    if(candidate.isValid){
+                        candidate.nbVoters++;
+                        candidate.score += 3 - (i*1);
+                    }
+                }
                 return (true, MSG_hasVoted);
             }
-            return (false, MSG_missingCandidate);
+            return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
     }
@@ -235,12 +261,12 @@ contract ElectionFactory is Ownable{
                 Candidate memory candidate = election.candidates[currentId];
                 if(candidate.isValid){
 
-                        if(maxResult < candidate.nbVoters){
-                            maxResult = candidate.nbVoters;
+                        if(maxResult < candidate.score){
+                            maxResult = candidate.score;
                             winnerIds = new address[](candidatesKeys.length);
                             winnerIdsCount = 0;
                             winnerIds[winnerIdsCount] = candidate.id;
-                        } else if(maxResult == candidate.nbVoters){
+                        } else if(maxResult == candidate.score){
                             winnerIds[winnerIdsCount] = candidate.id;
                             winnerIdsCount++;
                         }
@@ -266,7 +292,7 @@ contract ElectionFactory is Ownable{
     }
 
     //UTILS
-    function _generateRandom(string _str) private view returns (uint) {
+    function _generateRandom(bytes32 _str) private view returns (uint) {
         uint random = uint(keccak256(abi.encodePacked(_str,block.timestamp)));
         return random;
     }
