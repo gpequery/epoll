@@ -48,28 +48,20 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
 });
 
 router.post('/getCandidateList', function(req, res, next) {
-    let election_id = req.body.election_id;
-
-    electionContract.getCandidateList(election_id).then( results => {
+    electionContract.getCandidateList(req.body.election_id).then( results => {
         res.send(results);
     });
 });
 
 router.post('/getCandidateById', function(req, res, next) {
-    let election_id = req.body.election_id;
-    let candidate_id = req.body.candidate_id;
-
-    electionContract.getCandidateById(election_id, candidate_id).then(result => {
+    electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
         res.send(result);
     });
 });
 
 router.post('/deleteCandidateById', function(req, res, next) {
-    let election_id = req.body.id;
-
-    electionContract.deleteCandidateById(election_id).then(result => {
-        let transactionResult = JSON.parse(JSON.stringify(result));
-        console.log('Delete candidate Event : ' + JSON.stringify(transactionResult.events));
+    electionContract.deleteCandidateById(req.body.election_id).then(result => {
+        res.send(result);
     });
 });
 

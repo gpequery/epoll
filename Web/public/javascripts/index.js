@@ -49,11 +49,11 @@ $j(document).ready(function () {
 
     $j('body').on('click', '.removeCandidate', function (event) {
         if(confirm('Supprimer le candidat ?')) {
-            let election_id = $j(this).attr('data-election-id');
-            let candidate_id = $j(this).attr('data-candidate-id');
-
-            console.log(election_id);
-            console.log(candidate_id);
+            $j.post('/election/deleteCandidateById', {
+                election_id: $j(this).closest('.election').attr('data-id')
+            }, function() {
+                location.reload();
+            }, 'json');
 
             //TODO AFTER FIX candidateList
         }
@@ -63,7 +63,7 @@ $j(document).ready(function () {
         if(confirm('Supprimer l\'election ?')) {
             $j.post('/election/deleteElectionById', {
                 election_id: $j(this).closest('.election').attr('data-id')
-            }, function(data) {
+            }, function() {
                 location.reload();
             }, 'json');
         }
@@ -93,10 +93,10 @@ function getCandidateToHtmlRow(candidate, election_id, candidate_id) {
     let html = '';
 
     html += '<tr>';
+    html +=     '<td><img src="' + candidate[5] + '" style="max-height: 60px"/></td>';
     html +=     '<td>' + candidate[2] + '</td>';
     html +=     '<td>' + candidate[3] + '</td>';
     html +=     '<td>' + candidate[4] + '</td>';
-    html +=     '<td>' + candidate[5] + '</td>';
     html +=     '<td class="removeCandidate cursor-pointer" data-election-id="' + election_id + '" data-candidate-id="' + candidate_id + '">x</td>';
     html += '</tr>';
 
@@ -125,7 +125,7 @@ function getElectionToHtml(electionId, election) {
 
     html += '<div class="card-text col-12 mt-4">';
     html += '<table class="table table-dark table-striped"id="table-candidate">';
-    html += '<thead><tr><th>Prénom</th><th>Nom</th><th>Description</th><th>Image</th><th></th></th></tr></thead><tbody></tbody>';
+    html += '<thead><tr><th></th><th>Prénom</th><th>Nom</th><th>Description</th><th></th></th></tr></thead><tbody></tbody>';
     html += '</table>';
     html += '<div class="row justify-content-around">';
 
