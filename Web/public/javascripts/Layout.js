@@ -1,4 +1,6 @@
 $j(document).ready(function () {
+    $j('body').fireworks();
+
     let currentDate = new Date().toJSON().split('T')[0];
     $j('#modal-new-election input[type="date"]').prop('min', currentDate);
     $j('#modal-new-election input[type="date"]').val(currentDate);
