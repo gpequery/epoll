@@ -54,6 +54,8 @@ router.post('/getCandidateList', function(req, res, next) {
 });
 
 router.post('/getCandidateById', function(req, res, next) {
+    console.log(req.body.election_id);
+    console.log(req.body.candidate_id);
     electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
         res.send(result);
     });
@@ -66,16 +68,14 @@ router.post('/deleteCandidateById', function(req, res, next) {
 });
 
 router.post('/voteInAnElection', function(req, res, next) {
-    let election_id = req.body.id;
-    electionContract.voteInAnElection(election_id, "Batman", 25, "0xe1009458C3DEFffBb97A778615820a81809Ffdb5").then(result => {
-        console.log('Vote de Batman : ' + JSON.stringify(result));
+    electionContract.voteInAnElection(req.body.election_id, "myName", 25, req.body.candidate_id).then(result => {
+        res.send(result);
     });
 });
 
 router.post('/getElectionWinner', function(req, res, next) {
-    let election_id = req.body.id;
-    electionContract.getElectionWinner(election_id).then(result => {
-        console.log('Le gagnant est : ' + JSON.stringify(result));
+    electionContract.getElectionWinner(req.body.election_id).then(result => {
+        res.send(result[2][0]);
     });
 });
 

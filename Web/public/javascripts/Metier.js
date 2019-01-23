@@ -6,10 +6,12 @@ function getElectionState(election) {
         result.status = 0;
     } else if (now > election.candidaturePeriodStart && now < election.candidaturePeriodEnd) {
         result.status = 1;
+        result.className = 'currentCandidate';
     } else if (now > election.candidaturePeriodEnd && now < election.votePeriodStart) {
         result.status = 2;
     } else if (now > election.votePeriodStart && now < election.votePeriodEnd) {
         result.status = 3;
+        result.className = 'currentVote';
     } else if (now > election.votePeriodEnd) {
         result.status = 4;
     } else {
