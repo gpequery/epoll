@@ -21,8 +21,8 @@ contract ElectionFactory is Ownable{
         bytes32 lastName;
         bytes32 description;
         bytes32 pictureUrl;
-        uint nbVoters;
-        uint score;
+        uint8 nbVoters;
+        uint8 score;
         bool isValid;
         bool isDelete;
     }
@@ -30,13 +30,13 @@ contract ElectionFactory is Ownable{
     struct Voter {
         address id;
         bytes32 name;
-        uint age;
+        uint8 age;
         bool isValid;
     }
 
     struct Period {
-        uint start;
-        uint end;
+        uint256 start;
+        uint256 end;
     }
 
     struct Election {
@@ -141,25 +141,12 @@ contract ElectionFactory is Ownable{
     //Ajoute ou modifie les informations d'un candidat
     function addOrUpdateCandidate(uint _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool, string) {
         Election storage election = elections[_electionId];
-        if(election.isValid){
-            Period memory candidaturePeriod =  election.candidaturePeriod;
-            uint currentTime = now;
-            if(currentTime >= candidaturePeriod.start && currentTime < candidaturePeriod.end){
-                Candidate storage existCandidate = election.candidates[msg.sender];
-                if(existCandidate.isValid && existCandidate.id == msg.sender){
-                    existCandidate.firstName = _firstName;
-                    existCandidate.lastName = _lastName;
-                    existCandidate.description = _description;
-                    existCandidate.pictureUrl = _pictureUrl;
-                } else {
-                    Candidate memory candidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
-                    election.candidates[msg.sender] = candidate;
+
+        if(election.isValid && now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
+                    election.candidates[msg.sender] = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
                     election.candidatesKeys.push(msg.sender);
-                }
-                emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
+                    emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
                 return (true, MSG_Ok);
-            }
-            return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
     }
@@ -216,7 +203,7 @@ contract ElectionFactory is Ownable{
 
     //Voter à une élection
     //Prise en compte de 3 votes maximum avec un nombre de point décroissnat
-    function voteInAnElection(uint _electionId, bytes32 _name, uint _age, address[] _candidatesId) public returns (bool, string) {
+    function voteInAnElection(uint _electionId, bytes32 _name, uint8 _age, address[] _candidatesId) public returns (bool, string) {
 
     Election storage election = elections[_electionId];
         if(election.isValid){
@@ -236,7 +223,7 @@ contract ElectionFactory is Ownable{
                     Candidate storage candidate = election.candidates[_candidatesId[i]];
                     if(candidate.isValid){
                         candidate.nbVoters++;
-                        candidate.score += 3 - (i*1);
+                        candidate.score = uint8(candidate.score + (3 - (i*1)));
                     }
                 }
                 return (true, MSG_hasVoted);
