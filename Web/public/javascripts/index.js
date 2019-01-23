@@ -88,12 +88,18 @@ $j(document).ready(function () {
                     winnerModal.find('.modal-body .description').html(candidate[4]);
 
                     winnerModal.modal('show');
+
+                    $j('body').fireworks();
                 } else {
                     alert('Pas de Winner !');
                 }
             });
         });
     });
+
+    $j("#modal-winner").on('hidden.bs.modal', function () {
+        $j('body').fireworks('destroy');
+    })
 });
 
 function printCandidatsByElectionId(electionId) {
