@@ -79,7 +79,18 @@ $j(document).ready(function () {
                 election_id: election_id,
                 candidate_id: candidatId
             }, function(candidate) {
-                console.log(candidate)
+                if(candidate) {
+                    console.log(candidate);
+                    let winnerModal = $j('#modal-winner');
+
+                    winnerModal.find('.modal-body .image').attr('src', candidate[5]);
+                    winnerModal.find('.modal-body .fullName').html(candidate[2] + ' ' + candidate[3]);
+                    winnerModal.find('.modal-body .description').html(candidate[4]);
+
+                    winnerModal.modal('show');
+                } else {
+                    alert('Pas de Winner !');
+                }
             });
         });
     });
