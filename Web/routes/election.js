@@ -26,7 +26,6 @@ router.post('/deleteElectionById', function(req, res, next) {
     });
 });
 
-
 router.post('/getById', function(req, res, next) {
     electionContract.getElectionById(req.body.id).then(result => {
         let election = JSON.parse(JSON.stringify(result));
