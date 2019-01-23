@@ -13,8 +13,7 @@ router.post('/create', function(req, res, next) {
     let election_end_vote = req.body.election_end_vote;
 
     electionContract.createElection(election_name, election_start_candidate, election_end_candidate, election_start_vote, election_end_vote).then( results => {
-        let transactionResult = JSON.parse(JSON.stringify(results));
-        console.log('CreateElection Event : ' + JSON.stringify(transactionResult.events));
+        console.log('CreateElection Event : ' + JSON.stringify(results));
         res.send(true);
     });
 });

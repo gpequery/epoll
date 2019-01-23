@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0x41c14f7f96431817798eaaba1635e8c70cbe5511';
-let contractAddress = '0x0a42ea5c459c1fda6ec1fcc065f0f528dcaa1695';
+let accountAddress = '0xf7c1ed51bf3145a92996ac62449e8ca9aa61fa2d';
+let contractAddress = '0x6b06774ad1194cc273825be49d569999669940c6';
 
 module.exports = class ElectionFactory {
     constructor() {
