@@ -54,8 +54,6 @@ router.post('/getCandidateList', function(req, res, next) {
 });
 
 router.post('/getCandidateById', function(req, res, next) {
-    console.log(req.body.election_id);
-    console.log(req.body.candidate_id);
     electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
         res.send(result);
     });
