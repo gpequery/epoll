@@ -9,38 +9,17 @@ contract("ElectionFactory", accounts => {
         let endCandidateDate = 1548259355;
         let startVoteDate = 1548864155;
         let endVoteDate = 1549036955;
-        let instance;
 
         return ElectionFactory.deployed().then (async factory => {
             await factory.createElection(electionName, startCandidateDate, endCandidateDate, startVoteDate, endVoteDate);
             let electionList = await factory.getElectionsList();
-            return electionList[2][0];
-        }).then ( electionId =>{
-            console.log(electionId);
-            instance.getElectionById(electionId);
 
+            return await factory.getElectionById(electionList[2][0]);
+        }).then ( result =>{
+            assert.equal(result[0], true, "The state should be true");
+            assert.equal(result[1], "Ok.", "The response should be OK");
     });
     });
-
-
-    //         .then(factory => {
-    //             instance = factory;
-    //             instance.createElection(electionName, startCandidateDate, endCandidateDate, startVoteDate, endVoteDate)
-    //                 .then(()=>{
-    //                     instance.getElectionsList().then(result => {
-    //                         console.log("RESILE :" +result);
-    //                         let listElection = result[2];
-    //                         return result[2][0];
-    //                         return instance.getElementById(listElection[0])
-    //                     }).then()
-    //             });
-    //
-    //         }) .then(result => {
-    //             console.log(result);
-    //             assert.equal(result[0], true, "The state should be true");
-    //             assert.equal(result[1], "Ok.", "The response should be OK");
-    //         });
-    // });
 
     // it("should get empty election list", () => {
     //
