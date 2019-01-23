@@ -74,6 +74,7 @@ function printCandidatsByElectionId(electionId) {
     $j.post('/election/getCandidateList', {
         election_id: electionId
     }, function (data) {
+        console.log(data);
         $j.post('/election/getCandidateById', {
             election_id: electionId,
             candidate_id: data[2][0]
