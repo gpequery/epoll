@@ -107,15 +107,17 @@ function printCandidatsByElectionId(electionId) {
         election_id: electionId
     }, function (data) {
         console.log(data);
-        $j.post('/election/getCandidateById', {
-            election_id: electionId,
-            candidate_id: data[2][0]
-        }, function(candidate) {
-            if (candidate[0]) {
-                let candidateHtml = getCandidateToHtmlRow(candidate, electionId, data[2][0]);
-                $j('.election[data-id="' + electionId + '"] #table-candidate tbody').append(candidateHtml);
-            }
-        }, 'json');
+        if (data['addresses']) {
+            $j.post('/election/getCandidateById', {
+                election_id: electionId,
+                candidate_id: data[2][0]
+            }, function(candidate) {
+                if (candidate[0]) {
+                    let candidateHtml = getCandidateToHtmlRow(candidate, electionId, data[2][0]);
+                    $j('.election[data-id="' + electionId + '"] #table-candidate tbody').append(candidateHtml);
+                }
+            }, 'json');
+        }
     }, 'json');
 
     return null;
