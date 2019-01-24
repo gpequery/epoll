@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require('path');
 
 let web3;
-let accountAddress = '0x7acb68b9f01114d8894d7a69f5f32097d55d80b6';
-let contractAddress = '0x82452125d472fea68669a9d9b119d01a80f83591';
+let accountAddress = '0x614cfe130c49099ade7ac689b7d13b0fd01d18b8';
+let contractAddress = '0x7719ceee2f5a6bd6e588290b5e97d052a1b19f8f';
 
 module.exports = class ElectionFactory {
     constructor() {
@@ -37,7 +37,6 @@ module.exports = class ElectionFactory {
         let candidatureEndTime = new Date(candidatureEnd);
         let voteStartTime = new Date(voteStart);
         let voteEndTime = new Date(voteEnd);
-console.log("????????");
         return this.deployedContract.methods.createElection(name, candidatureStartTime.getTime(), candidatureEndTime.getTime(), voteStartTime.getTime(), voteEndTime.getTime())
             .send({from: account, gas: 3000000})
             .then(id => {

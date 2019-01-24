@@ -20,7 +20,7 @@ contract ElectionFactory is Ownable{
         bytes32 firstName;
         bytes32 lastName;
         bytes32 description;
-        bytes32 pictureUrl;
+        string pictureUrl;
         uint256 nbVoters;
         uint256 score;
         bool isValid;
@@ -141,21 +141,21 @@ contract ElectionFactory is Ownable{
     }
 
     //Ajoute ou modifie les informations d'un candidat
-    function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool state, string message) {
+    function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, string _pictureUrl) public returns (bool state, string message) {
         Election storage election = elections[_electionId];
         if(election.isValid){
 //            if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
-//                Candidate memory candidate = election.candidates[msg.sender];
-//                    if(!candidate.isValid){
+                Candidate memory candidate = election.candidates[msg.sender];
+                    if(!candidate.isValid){
                         Candidate memory newCandidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
                         election.candidates[msg.sender] = newCandidate;
                         election.candidatesKeys.push(msg.sender);
                         emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
                         return (true, MSG_Ok);
-//                    }
-//                return (false, MSG_isAlreadyCandidate);
+                    }
+                return (false, MSG_isAlreadyCandidate);
 //            }
-            return (false, MSG_wrongPeriod);
+//            return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
     }
@@ -188,7 +188,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi un candidat par ID
-    function getCandidateById(uint256 _electionId, address _candidateId) public view returns (bool state, string message, bytes32 firstName, bytes32 lastName, bytes32 description, bytes32 pictureUrl, bool isValid, bool isDelete) {
+    function getCandidateById(uint256 _electionId, address _candidateId) public view returns (bool state, string message, bytes32 firstName, bytes32 lastName, bytes32 description, string pictureUrl, bool isValid, bool isDelete) {
         Election storage election = elections[_electionId];
 
         if(election.isValid){

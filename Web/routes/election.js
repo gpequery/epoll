@@ -45,7 +45,7 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
     let firstname = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.firstname));
     let lastname = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.lastname));
     let description = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.description));
-    let image = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.image));
+    let image = req.body.image;
 
     electionContract.addOrUpdateCandidate(election_id, firstname, lastname, description, image).then( result => {
         console.log("ADD :" + JSON.stringify(result));
@@ -66,15 +66,10 @@ router.post('/getCandidateById', function(req, res, next) {
 
         electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
             let candidate = JSON.parse(JSON.stringify(result));
-            console.log("candidate : " + JSON.stringify(candidate));
             candidate.firstName = web3.utils.toUtf8(candidate.firstName);
             candidate.lastName = web3.utils.toUtf8(candidate.lastName);
             candidate.description = web3.utils.toUtf8(candidate.description);
-            candidate.pictureUrl = web3.utils.toUtf8(candidate.pictureUrl);
-            // candidate[2] = web3.utils.toUtf8(candidate.firstName);
-            // candidate[3] = web3.utils.toUtf8(candidate.lastName);
-            // candidate[4] = web3.utils.toUtf8(candidate.description);
-            // candidate[5] = web3.utils.toUtf8(candidate.pictureUrl);
+            // candidate.pictureUrl = web3.utils.toUtf8(candidate.pictureUrl);
 
             res.send(candidate);
         });
@@ -95,6 +90,12 @@ router.post('/voteInAnElection', function(req, res, next) {
 
 router.post('/getElectionWinner', function(req, res, next) {
     electionContract.getElectionWinner(req.body.election_id).then(result => {
+        let candidate = JSON.parse(JSON.stringify(result));
+        candidate.firstName = web3.utils.toUtf8(candidate.firstName);
+        candidate.lastName = web3.utils.toUtf8(candidate.lastName);
+        candidate.description = web3.utils.toUtf8(candidate.description);
+        candidate.pictureUrl = web3.utils.toUtf8(candidate.pictureUrl);
+
         res.send(result[2][0]);
     });
 });
