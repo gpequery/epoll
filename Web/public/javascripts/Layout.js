@@ -14,6 +14,7 @@ $j(document).ready(function () {
         let election_end_vote = dialog.find('input[name=election_end_vote]').val();
 
         $j.post('/election/create', {
+            userAccount : web3.eth.accounts[0],
             election_name: election_name,
             election_start_candidate: election_start_candidate,
             election_end_candidate: election_end_candidate,
@@ -38,6 +39,8 @@ $j(document).ready(function () {
             lastname: dialog.find('input[name=lastname]').val(),
             description: dialog.find('input[name=description]').val(),
             image: dialog.find('input[name=image]').val(),
+            userAccount: web3.eth.accounts[0],
+
         }, function (data) {
             location.reload();
         }, 'json');

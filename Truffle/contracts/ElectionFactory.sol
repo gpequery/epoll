@@ -144,7 +144,7 @@ contract ElectionFactory is Ownable{
     function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, string _pictureUrl) public returns (bool state, string message) {
         Election storage election = elections[_electionId];
         if(election.isValid){
-//            if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
+            if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
                 Candidate memory candidate = election.candidates[msg.sender];
                     if(!candidate.isValid){
                         Candidate memory newCandidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
@@ -154,8 +154,8 @@ contract ElectionFactory is Ownable{
                         return (true, MSG_Ok);
                     }
                 return (false, MSG_isAlreadyCandidate);
-//            }
-//            return (false, MSG_wrongPeriod);
+            }
+            return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
     }

@@ -17,7 +17,8 @@ $j(document).ready(function () {
     $j('body').on('click', '.removeCandidate', function (event) {
         if(confirm('Supprimer le candidat ?')) {
             $j.post('/election/deleteCandidateById', {
-                election_id: $j(this).closest('.election').attr('data-id')
+                election_id: $j(this).closest('.election').attr('data-id'),
+                userAccount : web3.eth.accounts[0]
             }, function() {
                 location.reload();
             }, 'json');
@@ -27,7 +28,8 @@ $j(document).ready(function () {
     $j('body').on('click', '.deleteElection', function (event) {
         if(confirm('Supprimer l\'election ?')) {
             $j.post('/election/deleteElectionById', {
-                election_id: $j(this).closest('.election').attr('data-id')
+                election_id: $j(this).closest('.election').attr('data-id'),
+                userAccount : web3.eth.accounts[0]
             }, function() {
                 location.reload();
             }, 'json');
@@ -38,7 +40,8 @@ $j(document).ready(function () {
         if(confirm('Voter ?')) {
             $j.post('/election/voteInAnElection', {
                 election_id: $j(this).closest('.election').attr('data-id'),
-                candidate_id: $j(this).attr('data-candidate-id')
+                candidate_id: $j(this).attr('data-candidate-id'),
+                userAccount : web3.eth.accounts[0]
             }, function() {
                 alert('A voter !');
             }, 'json');
