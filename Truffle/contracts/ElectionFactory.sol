@@ -300,7 +300,7 @@ contract ElectionFactory is Ownable{
     }
 
     //UTILS
-    function _generateRandom(bytes32 _str) private view returns (uint256 randomValue) {
+    function _generateRandom(bytes32 _str) private view returns (uint256) {
         uint256 random = uint256(keccak256(abi.encodePacked(_str,block.timestamp)));
         return random;
     }

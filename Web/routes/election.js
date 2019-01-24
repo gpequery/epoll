@@ -9,7 +9,8 @@ let electionContract = new electionClass();
 
 /* GET users listing. */
 router.post('/create', function(req, res, next) {
-    let election_name = this.web3.utils.hexToBytes(this.web3.utils.utf8ToHex(req.body.election_name));
+
+    let election_name = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.election_name));
     let election_start_candidate = req.body.election_start_candidate;
     let election_end_candidate = req.body.election_end_candidate;
     let election_start_vote = req.body.election_start_vote;
@@ -41,10 +42,10 @@ router.post('/getById', function(req, res, next) {
 
 router.post('/addOrUpdateCandidate', function(req, res, next) {
     let election_id = req.body.election_id;
-    let firstname = this.web3.utils.hexToBytes(this.web3.utils.utf8ToHex(req.body.firstname));
-    let lastname = this.web3.utils.hexToBytes(this.web3.utils.utf8ToHex(req.body.lastname));
-    let description = this.web3.utils.hexToBytes(this.web3.utils.utf8ToHex(req.body.description));
-    let image = this.web3.utils.hexToBytes(this.web3.utils.utf8ToHex(req.body.image));
+    let firstname = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.firstname));
+    let lastname = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.lastname));
+    let description = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.description));
+    let image = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.image));
 
     electionContract.addOrUpdateCandidate(election_id, firstname, lastname, description, image).then( result => {
         res.send(result);
