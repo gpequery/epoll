@@ -141,7 +141,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Ajoute ou modifie les informations d'un candidat
-    function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool, string) {
+    function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool state, string message) {
         Election storage election = elections[_electionId];
         if(election.isValid){
             if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
@@ -162,7 +162,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi la liste des candidats d'une election
-    function getCandidateList(uint256 _electionId) public view returns ( bool, string, address[]) {
+    function getCandidateList(uint256 _electionId) public view returns ( bool state, string message, address[] addresses) {
         Election storage election = elections[_electionId];
         address[] memory tmpResult = new address[](0);
 
@@ -189,7 +189,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi un candidat par ID
-    function getCandidateById(uint256 _electionId, address _candidateId) public view returns (bool, string, bytes32[]) {
+    function getCandidateById(uint256 _electionId, address _candidateId) public view returns (bool state, string message, bytes32[] details) {
         Election storage election = elections[_electionId];
         bytes32[] memory result = new  bytes32[](4);
 
@@ -209,7 +209,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Supprimer un candidat
-    function deleteCandidate(uint256 _electionId) public returns (bool, string) {
+    function deleteCandidate(uint256 _electionId) public returns (bool state, string message) {
         Election storage election = elections[_electionId];
         if(election.isValid){
             Candidate storage candidate = election.candidates[msg.sender];
@@ -226,7 +226,7 @@ contract ElectionFactory is Ownable{
 
     //Voter à une élection
     //Prise en compte de 3 votes maximum avec un nombre de point décroissnat
-    function voteInAnElection(uint256 _electionId, bytes32 _name, uint256 _age, address[] _candidatesId) public returns (bool, string) {
+    function voteInAnElection(uint256 _electionId, bytes32 _name, uint256 _age, address[] _candidatesId) public returns (bool state, string message) {
 
     Election storage election = elections[_electionId];
         if(election.isValid){
@@ -257,7 +257,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Retourne les résultats d'une élection
-    function getElectionWinner(uint256 _electionId) public view returns (bool, string, address[]){
+    function getElectionWinner(uint256 _electionId) public view returns (bool state, string message, address[] addresses){
     Election storage election = elections[_electionId];
         if(election.isValid){
             address[] memory candidatesKeys = election.candidatesKeys;
@@ -287,7 +287,7 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi le nombre de vote par candidat ID
-    function getCandidateNbVotersById(uint256 _electionId, address _candidateId) public view returns (bool, string, uint256) {
+    function getCandidateNbVotersById(uint256 _electionId, address _candidateId) public view returns (bool state, string message, uint256 nbVotes) {
     Election storage election = elections[_electionId];
         if(election.isValid){
             Candidate memory candidate = election.candidates[_candidateId];
@@ -300,7 +300,7 @@ contract ElectionFactory is Ownable{
     }
 
     //UTILS
-    function _generateRandom(bytes32 _str) private view returns (uint256) {
+    function _generateRandom(bytes32 _str) private view returns (uint256 random) {
         uint256 random = uint256(keccak256(abi.encodePacked(_str,block.timestamp)));
         return random;
     }
