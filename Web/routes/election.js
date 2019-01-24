@@ -76,7 +76,7 @@ router.post('/deleteCandidateById', function(req, res, next) {
 });
 
 router.post('/voteInAnElection', function(req, res, next) {
-    electionContract.voteInAnElection(req.body.election_id, "myName", 25, req.body.candidate_id).then(result => {
+    electionContract.voteInAnElection(req.body.election_id, "0x4772656700000000000000000000000000000000000000000000000000000000", 25, [req.body.candidate_id]).then(result => {
         res.send(result);
     });
 });
