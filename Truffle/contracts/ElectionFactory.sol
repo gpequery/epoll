@@ -58,11 +58,13 @@ contract ElectionFactory is Ownable{
     string private MSG_missingElection = "Election inconnu.";
     string private MSG_missingCandidate = "Candidat inconnu.";
     string private MSG_deleteCandidate = "Candidat supprimé.";
+    string private MSG_isAlreadyCandidate = "Est déjà candidat";
+
     string private MSG_hasAlreadyVoted = "A déjà voté.";
     string private MSG_hasVoted = "A voté.";
     string private MSG_Ok = "Ok.";
     string private MSG_NotOwner = "Vous n'êtes pas le propriétaire de cette éléction.";
-    string private MSG_wrongPeriod = "Ce n'est pas le bon moment.";
+    string private MSG_wrongPeriod = "Période incompatible.";
 
     //Créer une élection
     function createElection(bytes32 _name, uint256 _candidatureStart, uint256 _candidatureEnd, uint256 _voteStart, uint256 _voteEnd) public returns (bool state, string message, uint256 id) {
@@ -141,12 +143,20 @@ contract ElectionFactory is Ownable{
     //Ajoute ou modifie les informations d'un candidat
     function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool, string) {
         Election storage election = elections[_electionId];
+        if(election.isValid){
+            if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
+                Candidate memory candidate = election.candidates[msg.sender];
+                    if(!candidate.isValid){
+                        Candidate memory newCandidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
+                        election.candidates[msg.sender] = newCandidate;
+                        election.candidatesKeys.push(msg.sender);
+                        emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
+                        return (true, MSG_Ok);
+                    }
+                return (false, MSG_isAlreadyCandidate);
 
-        if(election.isValid && now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
-                    election.candidates[msg.sender] = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
-                    election.candidatesKeys.push(msg.sender);
-                    emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
-                return (true, MSG_Ok);
+            }
+            return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
     }
@@ -154,18 +164,24 @@ contract ElectionFactory is Ownable{
     //Renvoi la liste des candidats d'une election
     function getCandidateList(uint256 _electionId) public view returns ( bool, string, address[]) {
         Election storage election = elections[_electionId];
+        address[] memory tmpResult = new address[](0);
+
         if(election.isValid){
             address[] storage candidatesKeys = election.candidatesKeys;
-            address[] memory result = new address[](candidatesKeys.length);
+            tmpResult = new address[](candidatesKeys.length);
             uint256 count = 0;
 
             for (uint256 i=0; i<candidatesKeys.length; i++) {
                 address currentId = candidatesKeys[i];
                 Candidate memory candidate = election.candidates[currentId];
                 if(candidate.isValid){
-                    result[count] = currentId;
+                    tmpResult[count] = currentId;
                     count++;
                 }
+            }
+            address[] memory result = new address[](count);
+            for (uint256 j=0; j<count; j++) {
+                result[j] = tmpResult[j];
             }
             return (true, MSG_Ok, result);
         }
