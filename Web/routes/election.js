@@ -62,9 +62,11 @@ router.post('/getCandidateList', function(req, res, next) {
 });
 
 router.post('/getCandidateById', function(req, res, next) {
-    electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
-        res.send(result);
-    });
+    if (req.body.election_id && req.body.candidate_id) {
+        electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
+            res.send(result);
+        });
+    }
 });
 
 router.post('/deleteCandidateById', function(req, res, next) {
