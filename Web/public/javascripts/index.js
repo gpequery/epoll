@@ -65,7 +65,7 @@ $j(document).ready(function () {
                 election_id: $j(this).closest('.election').attr('data-id'),
                 candidate_id: $j(this).attr('data-candidate-id')
             }, function() {
-                location.reload();
+                alert('A voter !');
             }, 'json');
         }
     });
