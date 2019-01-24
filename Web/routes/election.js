@@ -90,12 +90,6 @@ router.post('/voteInAnElection', function(req, res, next) {
 
 router.post('/getElectionWinner', function(req, res, next) {
     electionContract.getElectionWinner(req.body.election_id).then(result => {
-        let candidate = JSON.parse(JSON.stringify(result));
-        candidate.firstName = web3.utils.toUtf8(candidate.firstName);
-        candidate.lastName = web3.utils.toUtf8(candidate.lastName);
-        candidate.description = web3.utils.toUtf8(candidate.description);
-        candidate.pictureUrl = web3.utils.toUtf8(candidate.pictureUrl);
-
         res.send(result[2][0]);
     });
 });

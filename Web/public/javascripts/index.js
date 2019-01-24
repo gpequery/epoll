@@ -83,9 +83,9 @@ $j(document).ready(function () {
                     console.log(candidate);
                     let winnerModal = $j('#modal-winner');
 
-                    winnerModal.find('.modal-body .image').attr('src', candidate[5]);
-                    winnerModal.find('.modal-body .fullName').html(candidate[2] + ' ' + candidate[3]);
-                    winnerModal.find('.modal-body .description').html(candidate[4]);
+                    winnerModal.find('.modal-body .image').attr('src', candidate.pictureUrl);
+                    winnerModal.find('.modal-body .fullName').html(candidate.firstName + ' ' + candidate.lastName);
+                    winnerModal.find('.modal-body .description').html(candidate.description);
 
                     winnerModal.modal('show');
 
