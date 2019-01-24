@@ -48,12 +48,15 @@ router.post('/addOrUpdateCandidate', function(req, res, next) {
     let image = web3.utils.hexToBytes(web3.utils.utf8ToHex(req.body.image));
 
     electionContract.addOrUpdateCandidate(election_id, firstname, lastname, description, image).then( result => {
+        console.log("ADD :" + JSON.stringify(result));
+
         res.send(result);
     });
 });
 
 router.post('/getCandidateList', function(req, res, next) {
     electionContract.getCandidateList(req.body.election_id).then( results => {
+        console.log("List :" + JSON.stringify(results));
         res.send(results);
     });
 });

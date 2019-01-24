@@ -144,18 +144,17 @@ contract ElectionFactory is Ownable{
     function addOrUpdateCandidate(uint256 _electionId, bytes32 _firstName, bytes32 _lastName, bytes32 _description, bytes32 _pictureUrl) public returns (bool state, string message) {
         Election storage election = elections[_electionId];
         if(election.isValid){
-            if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
-                Candidate memory candidate = election.candidates[msg.sender];
-                    if(!candidate.isValid){
+//            if(now >= election.candidaturePeriod.start && now < election.candidaturePeriod.end){
+//                Candidate memory candidate = election.candidates[msg.sender];
+//                    if(!candidate.isValid){
                         Candidate memory newCandidate = Candidate(msg.sender, _firstName, _lastName, _description, _pictureUrl, 0, 0, true, false);
                         election.candidates[msg.sender] = newCandidate;
                         election.candidatesKeys.push(msg.sender);
                         emit UpdateCandidate(_electionId, msg.sender, _firstName, _lastName);
                         return (true, MSG_Ok);
-                    }
-                return (false, MSG_isAlreadyCandidate);
-
-            }
+//                    }
+//                return (false, MSG_isAlreadyCandidate);
+//            }
             return (false, MSG_wrongPeriod);
         }
         return (false, MSG_missingElection);
@@ -189,23 +188,17 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi un candidat par ID
-    function getCandidateById(uint256 _electionId, address _candidateId) public view returns (bool state, string message, bytes32[] details) {
+    function getCandidateById(uint256 _electionId, address _candidateId) public view returns (bool state, string message, bytes32 firstName, bytes32 lastName, bytes32 description, bytes32 pictureUrl, bool isValid, bool isDelete) {
         Election storage election = elections[_electionId];
-        bytes32[] memory result = new  bytes32[](4);
 
         if(election.isValid){
             Candidate memory candidate = election.candidates[_candidateId];
             if(candidate.isValid){
-                result[0] = candidate.firstName;
-                result[1] = candidate.lastName;
-                result[2] = candidate.description;
-                result[3] = candidate.pictureUrl;
-
-            return (true, MSG_Ok, result) ;
+                return (true, MSG_Ok, candidate.firstName, candidate.lastName, candidate.description, candidate.pictureUrl, candidate.isValid, candidate.isDelete) ;
             }
-            return (false, MSG_missingCandidate, result) ;
+            return (false, MSG_missingCandidate, "0", "0", "0", "0", false, false) ;
         }
-        return (false, MSG_missingElection, result) ;
+        return (false, MSG_missingElection, "0", "0", "0", "0", false, false) ;
     }
 
     //Supprimer un candidat
