@@ -127,10 +127,10 @@ function getCandidateToHtmlRow(candidate, election_id, candidate_id) {
     let html = '';
 
     html += '<tr class="cursor-pointer" data-candidate-id="' + candidate_id + '">';
-    html +=     '<td><img src="' + candidate[5] + '" style="max-height: 60px"/></td>';
-    html +=     '<td>' + candidate[2] + '</td>';
-    html +=     '<td>' + candidate[3] + '</td>';
-    html +=     '<td>' + candidate[4] + '</td>';
+    html +=     '<td><img src="' + candidate.pictureUrl + '" style="max-height: 60px"/></td>';
+    html +=     '<td>' + candidate.firstName + '</td>';
+    html +=     '<td>' + candidate.lastName + '</td>';
+    html +=     '<td>' + candidate.description + '</td>';
     html +=     '<td class="removeCandidate text-danger">x</td>';
     html += '</tr>';
 

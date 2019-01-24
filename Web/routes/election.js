@@ -63,8 +63,20 @@ router.post('/getCandidateList', function(req, res, next) {
 
 router.post('/getCandidateById', function(req, res, next) {
     if (req.body.election_id && req.body.candidate_id) {
+
         electionContract.getCandidateById(req.body.election_id, req.body.candidate_id).then(result => {
-            res.send(result);
+            let candidate = JSON.parse(JSON.stringify(result));
+            console.log("candidate : " + JSON.stringify(candidate));
+            candidate.firstName = web3.utils.toUtf8(candidate.firstName);
+            candidate.lastName = web3.utils.toUtf8(candidate.lastName);
+            candidate.description = web3.utils.toUtf8(candidate.description);
+            candidate.pictureUrl = web3.utils.toUtf8(candidate.pictureUrl);
+            // candidate[2] = web3.utils.toUtf8(candidate.firstName);
+            // candidate[3] = web3.utils.toUtf8(candidate.lastName);
+            // candidate[4] = web3.utils.toUtf8(candidate.description);
+            // candidate[5] = web3.utils.toUtf8(candidate.pictureUrl);
+
+            res.send(candidate);
         });
     }
 });
