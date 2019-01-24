@@ -269,3 +269,90 @@ contract("ElectionFactory", accounts => {
         });
     });
 });
+contract("ElectionFactory", accounts => {
+    it("should vote in an election", () => {
+        return ElectionFactory.deployed().then (async factory => {
+            let startCandidateDate = 1546375339; //1/1/2019
+            let endCandidateDate = 1549399339; //5/2/2019
+            let startVoteDate = 1546375339; //1/1/2019
+            let endVoteDate = 1549399339; //5/2/2019
+            await factory.createElection("Election_1", startCandidateDate, endCandidateDate, startVoteDate, endVoteDate);
+            let electionList = await factory.getElectionsList();
+            await factory.addOrUpdateCandidate(electionList[2][0], "Nelson", "Mandela", "Être libre, ce n’est pas seulement se débarrasser de ses chaînes… C’est vivre de manière à respecter et renforcer la liberté des autres.", "https://upload.wikimedia.org/wikipedia/commons/1/14/Nelson_Mandela-2008_%28edit%29.jpg");
+            let candidateList =  await factory.getCandidateList(electionList[2][0]);
+
+            await factory.voteInAnElection(electionList[2][0], "Thomas", 21, [candidateList[2][0]]);
+
+            return await factory.getCandidateNbVotersById(electionList[2][0],candidateList[2][0]);
+        }).then ( result => {
+            assert.equal(result[0], true, "The state should be true");
+            assert.equal(result[1], MSG_Ok, "The response should be : " + MSG_Ok);
+            assert.equal(result[2], 1, "The number of elections should be 0");
+        });
+    });
+});
+contract("ElectionFactory", accounts => {
+    it("should not vote before period in an election", () => {
+        return ElectionFactory.deployed().then (async factory => {
+            let startCandidateDate = 1546375339; //1/1/2019
+            let endCandidateDate = 1549399339; //5/2/2019
+            let startVoteDate = 1549399339; //1/1/2019
+            let endVoteDate = 1549399339; //5/2/2019
+            await factory.createElection("Election_1", startCandidateDate, endCandidateDate, startVoteDate, endVoteDate);
+            let electionList = await factory.getElectionsList();
+            await factory.addOrUpdateCandidate(electionList[2][0], "Nelson", "Mandela", "Être libre, ce n’est pas seulement se débarrasser de ses chaînes… C’est vivre de manière à respecter et renforcer la liberté des autres.", "https://upload.wikimedia.org/wikipedia/commons/1/14/Nelson_Mandela-2008_%28edit%29.jpg");
+            let candidateList =  await factory.getCandidateList(electionList[2][0]);
+
+            await factory.voteInAnElection(electionList[2][0], "Thomas", 21, [candidateList[2][0]]);
+
+            return await factory.getCandidateNbVotersById(electionList[2][0],candidateList[2][0]);
+        }).then ( result => {
+            assert.equal(result[0], true, "The state should be true");
+            assert.equal(result[1], MSG_Ok, "The response should be : " + MSG_Ok);
+            assert.equal(result[2], 0, "The number of elections should be 0");
+        });
+    });
+});
+contract("ElectionFactory", accounts => {
+    it("should not vote after period in an election", () => {
+        return ElectionFactory.deployed().then (async factory => {
+            let startCandidateDate = 1546375339; //1/1/2019
+            let endCandidateDate = 1549399339; //5/2/2019
+            let startVoteDate = 1549399339; //1/1/2019
+            let endVoteDate = 1549399339; //5/2/2019
+            await factory.createElection("Election_1", startCandidateDate, endCandidateDate, startVoteDate, endVoteDate);
+            let electionList = await factory.getElectionsList();
+            await factory.addOrUpdateCandidate(electionList[2][0], "Nelson", "Mandela", "Être libre, ce n’est pas seulement se débarrasser de ses chaînes… C’est vivre de manière à respecter et renforcer la liberté des autres.", "https://upload.wikimedia.org/wikipedia/commons/1/14/Nelson_Mandela-2008_%28edit%29.jpg");
+            let candidateList =  await factory.getCandidateList(electionList[2][0]);
+
+            await factory.voteInAnElection(electionList[2][0], "Thomas", 21, [candidateList[2][0]]);
+
+            return await factory.getCandidateNbVotersById(electionList[2][0],candidateList[2][0]);
+        }).then ( result => {
+            assert.equal(result[0], true, "The state should be true");
+            assert.equal(result[1], MSG_Ok, "The response should be : " + MSG_Ok);
+            assert.equal(result[2], 0, "The number of elections should be 0");
+        });
+    });
+});
+contract("ElectionFactory", accounts => {
+    it("should get winner in an election", () => {
+        return ElectionFactory.deployed().then (async factory => {
+            let startCandidateDate = 1546375339; //1/1/2019
+            let endCandidateDate = 1549399339; //5/2/2019
+            let startVoteDate = 1546375339; //1/1/2019
+            let endVoteDate = 1549399339; //5/2/2019
+            await factory.createElection("Election_1", startCandidateDate, endCandidateDate, startVoteDate, endVoteDate);
+            let electionList = await factory.getElectionsList();
+            await factory.addOrUpdateCandidate(electionList[2][0], "Nelson", "Mandela", "Être libre, ce n’est pas seulement se débarrasser de ses chaînes… C’est vivre de manière à respecter et renforcer la liberté des autres.", "https://upload.wikimedia.org/wikipedia/commons/1/14/Nelson_Mandela-2008_%28edit%29.jpg");
+            let candidateList =  await factory.getCandidateList(electionList[2][0]);
+
+            await factory.voteInAnElection(electionList[2][0], "Thomas", 21, [candidateList[2][0]]);
+
+            return await factory.getElectionWinner(electionList[2][0]);
+        }).then ( result => {
+            assert.equal(result[0], true, "The state should be true");
+            assert.equal(result[1], MSG_Ok, "The response should be : " + MSG_Ok);
+        });
+    });
+});

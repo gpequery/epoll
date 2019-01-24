@@ -258,7 +258,6 @@ contract ElectionFactory is Ownable{
 
     //Retourne les résultats d'une élection
     function getElectionWinner(uint256 _electionId) public view returns (bool, string, address[]){
-        //TODO On vérifie que la période de vote est terminée
     Election storage election = elections[_electionId];
         if(election.isValid){
             address[] memory candidatesKeys = election.candidatesKeys;
@@ -289,7 +288,6 @@ contract ElectionFactory is Ownable{
 
     //Renvoi le nombre de vote par candidat ID
     function getCandidateNbVotersById(uint256 _electionId, address _candidateId) public view returns (bool, string, uint256) {
-        //TODO On vérifie que la période de vote est terminée
     Election storage election = elections[_electionId];
         if(election.isValid){
             Candidate memory candidate = election.candidates[_candidateId];
