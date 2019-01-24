@@ -106,12 +106,12 @@ contract ElectionFactory is Ownable{
     }
 
     //Renvoi une election par ID
-    function getElectionById(uint256 _id) public view returns (bool state, string message, bytes32 name, bool isValid, bool isDeleted) {
+    function getElectionById(uint256 _id) public view returns (bool state, string message, bytes32 name, uint candidaturePeriodStart, uint candidaturePeriodEnd,  uint votePeriodStart, uint votePeriodEnd, bool isValid, bool isDeleted) {
         Election memory election = elections[_id];
         if(election.isValid){
-            return (true, MSG_Ok, election.name, election.isValid, election.isDeleted) ;
+            return (true, MSG_Ok, election.name, election.candidaturePeriod.start, election.candidaturePeriod.end, election.votePeriod.start, election.votePeriod.end, election.isValid, election.isDeleted) ;
         }
-        return (false, MSG_missingElection, "0", false, false) ;
+        return (false, MSG_missingElection, "0", 0, 0, 0, 0, false, false) ;
     }
 
     function getElectionPeriodById(uint256 _id) public view returns (bool state, string message, uint256 candidaturePeriodStart, uint256 candidaturePeriodEnd,  uint256 votePeriodStart, uint256 votePeriodEnd) {
