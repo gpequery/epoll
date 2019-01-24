@@ -31,7 +31,7 @@ function getElectionState(election) {
         case 3:
             result.trad = 'Fin des votes : ' + getDateHtmlFromTimeStamp(election.votePeriodEnd);
             break;
-        case 3:
+        case 4:
             result.trad = 'Election fini depuis le ' + getDateHtmlFromTimeStamp(election.votePeriodEnd);
             break;
         default:

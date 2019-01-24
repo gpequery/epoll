@@ -10,31 +10,6 @@ $j(document).ready(function () {
             }, function (election) {
                 $j('#electionIndexContent').append(getElectionToHtml(id, election));
                 printCandidatsByElectionId(id);
-
-                // $j(document).on('click', "#vote_"+id, function() {
-                //     $j.post('/election/voteInAnElection', {
-                //         id
-                //     }, function(data) {
-                //         //TODO
-                //     }, 'json');
-                // });
-                //
-                // $j(document).on('click', "#nbVotersByCandidate_"+id, function() {
-                //     $j.post('/election/getCandidateNbVotersById', {
-                //         id
-                //     }, function(data) {
-                //         //TODO
-                //     }, 'json');
-                // });
-                //
-                // $j(document).on('click', "#deleteElection_"+id, function() {
-                //     $j.post('/election/deleteElectionById', {
-                //         id
-                //     }, function(data) {
-                //         //TODO
-                //     }, 'json');
-                // });
-
             }, 'json');
         })
     }
@@ -59,7 +34,7 @@ $j(document).ready(function () {
         }
     });
 
-    $j('body').on('click', '.election tr', function (event) {
+    $j('body').on('click', '.election.periodVote tr', function (event) {
         if(confirm('Voter ?')) {
             $j.post('/election/voteInAnElection', {
                 election_id: $j(this).closest('.election').attr('data-id'),
@@ -80,7 +55,6 @@ $j(document).ready(function () {
                 candidate_id: candidatId
             }, function(candidate) {
                 if(candidate) {
-                    console.log(candidate);
                     let winnerModal = $j('#modal-winner');
 
                     winnerModal.find('.modal-body .image').attr('src', candidate.pictureUrl);
@@ -107,16 +81,19 @@ function printCandidatsByElectionId(electionId) {
         election_id: electionId
     }, function (data) {
         console.log(data);
-        if (data['addresses']) {
+        if (data['addresses'].length) {
             $j.post('/election/getCandidateById', {
                 election_id: electionId,
                 candidate_id: data[2][0]
             }, function(candidate) {
                 if (candidate[0]) {
                     let candidateHtml = getCandidateToHtmlRow(candidate, electionId, data[2][0]);
-                    $j('.election[data-id="' + electionId + '"] #table-candidate tbody').append(candidateHtml);
+                    $j('.election[data-id="' + electionId + '"] .table-candidate tbody').append(candidateHtml);
+                    $j('.election[data-id="' + electionId + '"] .table-candidate').show();
                 }
             }, 'json');
+        } else {
+            $j('.election[data-id="' + electionId + '"] .table-candidate').hide();
         }
     }, 'json');
 
@@ -140,8 +117,21 @@ function getCandidateToHtmlRow(candidate, election_id, candidate_id) {
 function getElectionToHtml(electionId, election) {
     let stats_data = getElectionState(election);
 
+    let className;
+
+    switch (stats_data.status) {
+        case 1:
+            className = 'periodCandidate';
+            break;
+        case 3:
+            className = 'periodVote';
+            break;
+        default:
+            className = 'default';
+    }
+
     let html = '';
-    html += '<div class="card text-white bg-dark mt-5 col-5 election" data-id="' + electionId + '">';
+    html += '<div class="card text-white bg-dark mt-5 col-5 election ' + className + '" data-id="' + electionId + '">';
     html += '<h2 class="card-header row"><span class="col-11">' + election.name + '</span><span class="col-1 cursor-pointer text-danger deleteElection">X</span></h2>';
     html += '<div class="card-body row justify-content-center">';
     html += '<h5 class="card-title col-12">' + stats_data.trad + '</h5>';
@@ -158,7 +148,7 @@ function getElectionToHtml(electionId, election) {
     html += '<div class="col-3">' + getDateHtmlFromTimeStamp(election.votePeriodEnd) + '</div>';
 
     html += '<div class="card-text col-12 mt-4">';
-    html += '<table class="table table-dark table-striped" id="table-candidate">';
+    html += '<table class="table table-dark table-striped table-candidate">';
     html += '<thead><tr><th></th><th>Prénom</th><th>Nom</th><th>Description</th><th></th></th></tr></thead><tbody></tbody>';
     html += '</table>';
     html += '<div class="row justify-content-around">';
@@ -167,16 +157,14 @@ function getElectionToHtml(electionId, election) {
         html += '<input class="btn btn-outline-success col-5 new-candidat-modal" data-toggle="modal" data-target="#modal-new-candidat" value="Ajouter candidat" type="submit"/>';
     }
 
-    html += '<input class="btn btn-outline-success col-5 offset-1 see-result cursor-pointer" value="Resultat" type="submit"/>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
+    if(stats_data.status === 4) {
+        html += '<input class="btn btn-outline-success col-5 offset-1 see-result cursor-pointer" value="Resultat" type="submit"/>';
+    }
 
-    // '<button id="vote_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test vote</button></br>' +
-    // '<button id="winner_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test get winner</button></br>' +
-    // '<button id="nbVotersByCandidate_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test nbVotersByCandidate</button>' +
-    // '<button id="deleteElection_'+electionId+'" class="btn btn-outline-success my-2 my-sm-0">Test deleteElection</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
 
     return html;
 }
